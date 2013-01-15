@@ -17,6 +17,9 @@ public class MainActivity extends Activity implements OnClickListener {
         
         View teamMembersButton = findViewById(R.id.team_member_button);
         teamMembersButton.setOnClickListener(this);
+        
+        View sudokuButton = findViewById(R.id.sudoku_button);
+        sudokuButton.setOnClickListener(this);
     }
 
     @Override
@@ -35,10 +38,15 @@ public class MainActivity extends Activity implements OnClickListener {
        super.onPause();
     }
     
+    Intent i;
     public void onClick(View v) {
     	switch (v.getId()) {
     	case R.id.team_member_button:
-    		Intent i = new Intent(this, TeamMembersActivity.class);
+    		i = new Intent(this, TeamMembersActivity.class);
+    		startActivity(i);
+    		break;
+    	case R.id.sudoku_button:
+    		i = new Intent(this, Sudoku.class);
     		startActivity(i);
     		break;
     	}
