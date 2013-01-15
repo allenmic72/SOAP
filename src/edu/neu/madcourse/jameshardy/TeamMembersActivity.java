@@ -19,7 +19,7 @@ public class TeamMembersActivity extends Activity {
         
         TextView textOut;
         textOut = (TextView)findViewById(R.id.devIdText);
-        textOut.setText(devId);
+        textOut.setText("Device ID: " + devId);
     }
 
     @Override

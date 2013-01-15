@@ -1,5 +1,6 @@
 package edu.neu.madcourse.jameshardy;
 
+import edu.neu.mobileClass.*;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -15,11 +16,16 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        PhoneCheckAPI.doAuthorization(this);
+        
         View teamMembersButton = findViewById(R.id.team_member_button);
         teamMembersButton.setOnClickListener(this);
         
         View sudokuButton = findViewById(R.id.sudoku_button);
         sudokuButton.setOnClickListener(this);
+        
+        View crashButton = findViewById(R.id.crash_button);
+        crashButton.setOnClickListener(this);
     }
 
     @Override
@@ -47,6 +53,10 @@ public class MainActivity extends Activity implements OnClickListener {
     		break;
     	case R.id.sudoku_button:
     		i = new Intent(this, Sudoku.class);
+    		startActivity(i);
+    		break;
+    	case R.id.crash_button:
+    		i = new Intent(this, CrashActivity.class);
     		startActivity(i);
     		break;
     	}
