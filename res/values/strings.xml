@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="app_name">NUMAD-JamesHardy</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">James Hardy</string>
+    <string name="title_activity_team_members">Team Members</string>
+	<string name="team_member_button_title">Team Members</string>
+	<string name="team_member_1_name">James Hardy</string>
+	<string name="team_member_1_email">hardy.ja@husky.neu.edu</string>
+	<string name="team_member_photo_desc">team member 1</string>
+    
+</resources>
