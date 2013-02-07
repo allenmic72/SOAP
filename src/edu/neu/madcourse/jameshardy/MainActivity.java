@@ -1,5 +1,7 @@
 package edu.neu.madcourse.jameshardy;
 
+import edu.neu.madcourse.jameshardy.Boggle.*;
+import edu.neu.madcourse.jameshardy.Sudoku.*;
 import edu.neu.mobileClass.*;
 
 import android.os.Bundle;
@@ -14,18 +16,25 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_launch_window);
         
-        PhoneCheckAPI.doAuthorization(this);
+        //DON'T FORGET TO ADD THIS IN
+        //PhoneCheckAPI.doAuthorization(this);
         
-        View teamMembersButton = findViewById(R.id.team_member_button);
+        View teamMembersButton = findViewById(R.id.team_members_button);
         teamMembersButton.setOnClickListener(this);
         
         View sudokuButton = findViewById(R.id.sudoku_button);
         sudokuButton.setOnClickListener(this);
         
+        View boggleButton = findViewById(R.id.boggle_button);
+        boggleButton.setOnClickListener(this);
+        
         View crashButton = findViewById(R.id.crash_button);
         crashButton.setOnClickListener(this);
+        
+        View exitButton = findViewById(R.id.exit_button);
+        exitButton.setOnClickListener(this);
     }
 
     @Override
@@ -47,7 +56,7 @@ public class MainActivity extends Activity implements OnClickListener {
     Intent i;
     public void onClick(View v) {
     	switch (v.getId()) {
-    	case R.id.team_member_button:
+    	case R.id.team_members_button:
     		i = new Intent(this, TeamMembersActivity.class);
     		startActivity(i);
     		break;
@@ -55,9 +64,16 @@ public class MainActivity extends Activity implements OnClickListener {
     		i = new Intent(this, Sudoku.class);
     		startActivity(i);
     		break;
+    	case R.id.boggle_button:
+    		i = new Intent(this, Boggle.class);
+    		startActivity(i);
+    		break;
     	case R.id.crash_button:
     		i = new Intent(this, CrashActivity.class);
     		startActivity(i);
+    		break;
+    	case R.id.exit_button:
+    		finish();
     		break;
     	}
     }

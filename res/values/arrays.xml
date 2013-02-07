@@ -13,4 +13,9 @@
       <item>@string/medium_label</item>
       <item>@string/hard_label</item>
    </array>
+   <array name="grid_size">
+       <item>@string/four_label</item>
+       <item>@string/five_label</item>
+       <item>@string/six_label</item>
+   </array>
 </resources>

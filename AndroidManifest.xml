@@ -9,9 +9,9 @@
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.READ_PHONE_DATA" />
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_DATA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -19,7 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:theme="@android:style/Theme.Black" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,27 +29,44 @@
         </activity>
         <activity
             android:name=".TeamMembersActivity"
-            android:label="@string/title_activity_team_members" >
+            android:label="@string/title_activity_team_members"
+            android:theme="@android:style/Theme.Black" >
         </activity>
         <activity
-            android:name=".Sudoku"
-            android:label="@string/main_title" >
+            android:name=".Sudoku.Sudoku"
+            android:label="@string/sudoku_main_title" >
         </activity>
         <activity
-            android:name=".About"
-            android:label="@string/about_title"
-            android:theme="@android:style/Theme.Dialog" >
+            android:name=".Boggle.Boggle"
+            android:label="@string/boggle_main_title"
+            android:theme="@android:style/Theme.Black" >
         </activity>
-        <activity
-            android:name=".Prefs"
-            android:label="@string/settings_title" >
-        </activity>
-        <activity
-            android:name=".Game"
-            android:label="@string/game_title" />
         <activity
             android:name=".CrashActivity"
             android:label="@string/title_activity_crash" >
+        </activity>
+        <!-- SUDOKU ACTIVITIES -->
+        <activity
+            android:name=".Sudoku.About"
+            android:label="@string/sudoku_about_title"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name=".Sudoku.Prefs"
+            android:label="@string/sudoku_settings_title" >
+        </activity>
+        <activity
+            android:name=".Sudoku.Game"
+            android:label="@string/game_title" />
+        <!-- BOGGLE ACTIVITIES -->
+        <activity
+            android:name=".Boggle.BoggleGame"
+            android:label="@string/boggle_game_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Boggle.BoggleAcknowledgements"
+            android:label="@string/title_activity_boggle_acknowledgements"
+            android:theme="@android:style/Theme.Dialog" >
         </activity>
     </application>
 

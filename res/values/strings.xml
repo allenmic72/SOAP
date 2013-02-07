@@ -1,38 +1,43 @@
 <resources>
 
+    <!-- MAIN LAUNCH RESOURCES -->
     <string name="app_name">NUMAD-JamesHardy</string>
     <string name="hello_world">Hello world!</string>
+    <string name="welcome">Welcome To My App!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">James Hardy</string>
     <string name="title_activity_team_members">Team Members</string>
-    <string name="team_member_button_title">Team Members</string>
+    <string name="team_members_button_title">Team Members</string>
     <string name="team_member_1_name">James Hardy</string>
     <string name="team_member_1_email">hardy.ja@husky.neu.edu</string>
     <string name="team_member_photo_desc">team member 1</string>
     <string name="sudoku_button_title">Sudoku</string>
+    <string name="boggle_button_title">Boggle</string>
     <string name="crash_button_title">Crash App</string>
+    <string name="title_activity_crash">CrashActivity</string>
+    <string name="exit_button_label">Exit</string>
 
     <!-- SUDOKU RESOURCES -->
-    <string name="main_title">Android Sudoku</string>
+    <string name="sudoku_main_title">Android Sudoku</string>
     <string name="continue_label">Continue</string>
     <string name="new_game_label">New Game</string>
     <string name="about_label">About</string>
     <string name="exit_label">Exit</string>
-    <string name="settings_label">Settings...</string>
-    <string name="settings_title">Sudoku settings</string>
+    <string name="sudoku_settings_label">Settings...</string>
+    <string name="sudoku_settings_title">Sudoku settings</string>
     <string name="settings_shortcut">s</string>
     <string name="music_title">Music</string>
     <string name="music_summary">Play background music</string>
     <string name="hints_title">Hints</string>
     <string name="hints_summary">Show hints during play</string>
-    <string name="new_game_title">Difficulty</string>
+    <string name="sudoku_new_game_title">Difficulty</string>
     <string name="easy_label">Easy</string>
     <string name="medium_label">Medium</string>
     <string name="hard_label">Hard</string>
     <string name="game_title">Game</string>
     <string name="no_moves_label">No moves</string>
     <string name="keypad_title">Keypad</string>
-    <string name="about_title">About Android Sudoku</string>
+    <string name="sudoku_about_title">About Android Sudoku</string>
     <string name="about_text">\
 Sudoku is a logic-based number placement puzzle.
 Starting with a partially completed 9x9 grid, the
@@ -40,6 +45,27 @@ objective is to fill the grid so that each
 row, each column, and each of the 3x3 boxes
 (also called <i>blocks</i>) contains the digits
 1 to 9 exactly once.</string>
-    <string name="title_activity_crash">CrashActivity</string>
+
+    <!-- BOGGLE RESOURCES -->
+    <string name="boggle_main_title">Boggle on Droids</string>
+    <string name="boggle_game_title">Boggle</string>
+    <string name="boggle_new_game_title">Grid Size</string>
+    <string name="boggle_new_game_button_title">New Game</string>
+    <string name="boggle_acknowledgements_button_title">Acknowledgements</string>
+    <string name="four_label">4 X 4</string>
+    <string name="five_label">5 X 5</string>
+    <string name="six_label">6 X 6</string>
+    <string name="boggle_settings_button_label">Settings</string>
+    <string name="title_activity_boggle_acknowledgements">Boggle Acknowledgements</string>
+    <string name="boggle_acknowledgements">\
+I would like to acknowledge the creators of
+the sample code within the Android SDK. For
+example the writers of <i>FingerPainting</i>.
+I would also like to acknowledge the Android 
+developer\'s website for their sample code in
+SQLite, local storage, and 2D graphics. Finally,
+I would like to thank the creators and writers
+of <i>Hello, Android</i> for their Sudoku code,
+which we have sampled. </string>
 
 </resources>

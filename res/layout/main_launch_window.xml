@@ -1,0 +1,104 @@
+<!--
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_world"
+        tools:context=".MainActivity" />
+
+    <Button
+        android:id="@+id/team_member_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:text="@string/team_member_button_title" />
+
+    <Button
+        android:id="@+id/sudoku_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/team_member_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/sudoku_button_title" />
+
+    <Button
+        android:id="@+id/boggle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sudoku_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/boggle_button_title" />
+
+    <Button
+        android:id="@+id/crash_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/boggle_button"
+        android:layout_centerHorizontal="true"
+        android:text="@string/crash_button_title" />
+
+</RelativeLayout>
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="35dip" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dip"
+        android:text="@string/welcome"
+        android:textSize="25sp"
+        tools:context=".MainActivity" />
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:stretchColumns="*" >
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/sudoku_button"
+                android:text="@string/sudoku_button_title" />
+
+            <Button
+                android:id="@+id/boggle_button"
+                android:text="@string/boggle_button_title" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/team_members_button"
+                android:text="@string/team_members_button_title" />
+
+            <Button
+                android:id="@+id/crash_button"
+                android:text="@string/crash_button_title" />
+        </TableRow>
+
+        <TableRow>
+
+            <Button
+                android:id="@+id/exit_button"
+                android:text="@string/exit_button_label" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
