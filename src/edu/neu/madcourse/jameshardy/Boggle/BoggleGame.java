@@ -2,19 +2,24 @@ package edu.neu.madcourse.jameshardy.Boggle;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import edu.neu.madcourse.jameshardy.R;
 import edu.neu.madcourse.jameshardy.R.raw;
 import edu.neu.madcourse.jameshardy.R.string;
 import edu.neu.madcourse.jameshardy.Boggle.DatabaseTable;
+import edu.neu.madcourse.jameshardy.Boggle.WordHelper;
 import android.app.Activity;
 import android.app.Dialog;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class BoggleGame extends Activity {
@@ -31,7 +36,15 @@ public class BoggleGame extends Activity {
 
 	private List<String[]> letterDice;
 	private String[] board;
+	private List<String> word;
+	private List<String> acceptedWords;
 	private int grid_dim;
+	public String mTimerString;
+	private CountDownTimer timer;
+	
+	//WordHelper helper = null;
+	//Cursor dataset_cursor = null;
+	DatabaseTable dbDictionary;
 
 	private BoardView boardView;
 
@@ -58,8 +71,28 @@ public class BoggleGame extends Activity {
 		setContentView(boardView);
 		boardView.requestFocus();
 
-		// ...
+		mTimerString = "";
+		timer = new CountDownTimer(120000, 1000) {
+			public void onTick(long millisUntilFinished) {
+				mTimerString = "seconds remaining: " + (millisUntilFinished / 1000);
+				boardView.invalidate();
+			}
+			
+			public void onFinish() {
+				mTimerString = "Time's Up!";
+				boardView.invalidate();
+			}
+		}.start();
+	
 		
+		dbDictionary = new DatabaseTable(this);
+		//TODO
+		//helper = new WordHelper(this);
+		//dataset_cursor = helper.getAll();
+		
+		Arrays.fill(usedLetters,false);
+		word = new ArrayList();
+
 		// If the activity is restarted, do a continue next time
 		getIntent().putExtra(GRID_SIZE, GRID_CONTINUE);
 	}
@@ -80,12 +113,13 @@ public class BoggleGame extends Activity {
 		 * getPreferences(MODE_PRIVATE).edit().putString(PREF_PUZZLE,
 		 * toPuzzleString(puzzle)).commit();
 		 */
+		
 	}
-	
+
 	@Override
 	protected void onDestroy() {
-		//db.closeDB();
-		
+		// db.closeDB();
+
 		super.onDestroy();
 	}
 
@@ -219,5 +253,45 @@ public class BoggleGame extends Activity {
 	/** Return the tile at the given coordinates */
 	private String getTile(int x, int y) {
 		return board[y * grid_dim + x];
+	}
+
+	// allow space up to 6 for max grid size
+	private final boolean[] usedLetters = new boolean[36];
+
+	/** Return cached used tiles visible from the given coords */
+	protected boolean[] getUsedLetters() {
+		return usedLetters;
+	}
+
+	/** Change the tile only if it's a valid move */
+	protected boolean setTileIfValid(int x, int y) {
+		int square = y * grid_dim + x;
+		Log.d(TAG, "ontouch: square " + square);
+		if (usedLetters[square] == true) {
+			//letter already used, return false
+			return false;		
+		}
+		else {
+			setTile(x, y);
+			return true;
+		}
+	}
+
+	/** Mark square as used */
+	private void setTile(int x, int y) {
+		usedLetters[y * grid_dim + x] = true;
+		//ADD TO WORD
+		String s = getTileString(x,y);
+		word.add(s);
+		Log.d(TAG, "ontouch: success adding to word");
+		
+		// HIGHLIGHT TILE
+		// ADD TO WORD
+		// MARK AS USED
+	}
+	
+	/** Empty used letters for next word */
+	protected void emptyUsedLetters() {
+		Arrays.fill(usedLetters,false);
 	}
 }

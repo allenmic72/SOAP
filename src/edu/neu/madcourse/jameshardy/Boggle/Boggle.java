@@ -83,4 +83,5 @@ public class Boggle extends Activity implements OnClickListener {
 		intent.putExtra(BoggleGame.GRID_SIZE, i);
 		startActivity(intent);
 	}
+	
 }
