@@ -18,4 +18,12 @@
        <item>@string/five_label</item>
        <item>@string/six_label</item>
    </array>
+   <array name="time_up">
+       <item>@string/boggle_new_game</item>
+       <item>@string/boggle_quit</item>
+   </array>
+   <array name="pause">
+       <item>@string/boggle_resume</item>
+       <item>@string/boggle_quit</item>
+   </array>
 </resources>

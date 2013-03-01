@@ -172,6 +172,18 @@ public class BoardView extends View {
 		scoreText.setTextSize(20);
 		canvas.drawText("SCORE IS: ", 300, 630, scoreText);
 
+		// Draw last word text
+		Paint lastText = new Paint();
+		lastText.setColor(Color.BLACK);
+		lastText.setTextSize(20);
+		canvas.drawText("Last Word: " + game.lastWord, 50, 600, lastText);
+
+		// draw is valid text
+		Paint isValidText = new Paint();
+		isValidText.setColor(Color.BLACK);
+		isValidText.setTextSize(20);
+		canvas.drawText("Valid Word: " + game.lastWordValid, 50, 630, isValidText);
+
 		// Draw Pause and Quit Buttons
 		Paint pauseBtn = new Paint();
 		pauseBtn.setColor(getResources().getColor(R.color.puzzle_background));
@@ -200,7 +212,9 @@ public class BoardView extends View {
 	}
 
 	public void setSelectedTile() {
+		// setTile adds letter if valid
 		if (game.setTileIfValid(selX, selY)) {
+			// add square to be drawn if valid
 			getRect(selX, selY, selRect);
 			Rect temp = new Rect(selRect);
 			recList.add(temp);
@@ -282,10 +296,18 @@ public class BoardView extends View {
 	private void touch_up() {
 		mPath.lineTo(mX, mY);
 		// TODO acknowledge word and call search/check
+		if (game.isValidWord()) {
+			game.lastWordValid = "YES";
+		} else {
+			game.lastWordValid = "NO";
+			startAnimation(AnimationUtils.loadAnimation(game, R.anim.shake));
+		}
 
 		// clear squares drawn
 		recList.clear();
 		invalidate();
+		// clear word
+		game.emptyWord();
 
 		// empty used squares
 		game.emptyUsedLetters();
@@ -298,9 +320,27 @@ public class BoardView extends View {
 		float x = event.getX();
 		float y = event.getY();
 
+		// PAUSE BUTTON 50, 700, 200, 800
+		if (((int) x > 50 && (int) x < 200)
+				&& ((int) y > 700 && (int) y < 800)) {
+			
+			/*
+			try {
+				game.timer.wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			*/
+			game.popUpPauseAlert();
+			return true;
+		}
+		
 		// QUIT BUTTON
-		if (((int) x > 300 && (int) x < 450) && ((int) y > 700 && (int) y < 800)) {
+		if (((int) x > 300 && (int) x < 450)
+				&& ((int) y > 700 && (int) y < 800)) {
 			game.finish();
+			return true;
 		}
 		// Log.d(TAG, "ONTOUCHEVENT " + x + " " + y);
 		switch (event.getAction()) {

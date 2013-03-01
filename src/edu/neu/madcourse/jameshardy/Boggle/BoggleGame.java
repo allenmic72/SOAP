@@ -11,9 +11,11 @@ import edu.neu.madcourse.jameshardy.R;
 import edu.neu.madcourse.jameshardy.R.raw;
 import edu.neu.madcourse.jameshardy.R.string;
 import edu.neu.madcourse.jameshardy.Boggle.DatabaseTable;
-import edu.neu.madcourse.jameshardy.Boggle.WordHelper;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -37,14 +39,17 @@ public class BoggleGame extends Activity {
 	private List<String[]> letterDice;
 	private String[] board;
 	private List<String> word;
+	public String lastWord = "";
+	public String lastWordValid = "NO";
 	private List<String> acceptedWords;
 	private int grid_dim;
 	public String mTimerString;
-	private CountDownTimer timer;
-	
-	//WordHelper helper = null;
-	//Cursor dataset_cursor = null;
+	public CountDownTimer timer;
+
+	// WordHelper helper = null;
+	// Cursor dataset_cursor = null;
 	DatabaseTable dbDictionary;
+	// WordsDatabase db;
 
 	private BoardView boardView;
 
@@ -71,26 +76,43 @@ public class BoggleGame extends Activity {
 		setContentView(boardView);
 		boardView.requestFocus();
 
+		// load dictionary
+		dbDictionary = new DatabaseTable(this);
+		dbDictionary.open();
+		// db = new WordsDatabase(this);
+		// db.open();
+		// String[] s = {"word"};
+		// Cursor c = dbDictionary.getWordMatches("hello", null);
+
+		// Cursor c = dbDictionary.wordQuery("hello");
+		// Log.d(TAG, "DATABASE: " + dumpCursorToString(c));
+		/*
+		 * if (c != null) { c.moveToFirst(); }
+		 */
+
+		// String s = c.getString(0);
+		// String s = dbDictionary.wordQuery("hello");
 		mTimerString = "";
 		timer = new CountDownTimer(120000, 1000) {
 			public void onTick(long millisUntilFinished) {
-				mTimerString = "seconds remaining: " + (millisUntilFinished / 1000);
+				mTimerString = "seconds remaining: "
+						+ (millisUntilFinished / 1000);
 				boardView.invalidate();
 			}
-			
+
 			public void onFinish() {
 				mTimerString = "Time's Up!";
 				boardView.invalidate();
+
+				popUpFinishAlert();
 			}
 		}.start();
-	
-		
-		dbDictionary = new DatabaseTable(this);
-		//TODO
-		//helper = new WordHelper(this);
-		//dataset_cursor = helper.getAll();
-		
-		Arrays.fill(usedLetters,false);
+
+		// TODO
+		// helper = new WordHelper(this);
+		// dataset_cursor = helper.getAll();
+
+		Arrays.fill(usedLetters, false);
 		word = new ArrayList();
 
 		// If the activity is restarted, do a continue next time
@@ -113,12 +135,12 @@ public class BoggleGame extends Activity {
 		 * getPreferences(MODE_PRIVATE).edit().putString(PREF_PUZZLE,
 		 * toPuzzleString(puzzle)).commit();
 		 */
-		
+
 	}
 
 	@Override
 	protected void onDestroy() {
-		// db.closeDB();
+		dbDictionary.closeDB();
 
 		super.onDestroy();
 	}
@@ -268,10 +290,9 @@ public class BoggleGame extends Activity {
 		int square = y * grid_dim + x;
 		Log.d(TAG, "ontouch: square " + square);
 		if (usedLetters[square] == true) {
-			//letter already used, return false
-			return false;		
-		}
-		else {
+			// letter already used, return false
+			return false;
+		} else {
 			setTile(x, y);
 			return true;
 		}
@@ -280,18 +301,100 @@ public class BoggleGame extends Activity {
 	/** Mark square as used */
 	private void setTile(int x, int y) {
 		usedLetters[y * grid_dim + x] = true;
-		//ADD TO WORD
-		String s = getTileString(x,y);
+		// ADD TO WORD
+		String s = getTileString(x, y);
 		word.add(s);
 		Log.d(TAG, "ontouch: success adding to word");
-		
+
 		// HIGHLIGHT TILE
 		// ADD TO WORD
 		// MARK AS USED
 	}
-	
+
 	/** Empty used letters for next word */
 	protected void emptyUsedLetters() {
-		Arrays.fill(usedLetters,false);
+		Arrays.fill(usedLetters, false);
+	}
+
+	public void addLetterToWord(int x, int y) {
+		String letter = getTileString(x, y);
+		word.add(letter);
+	}
+
+	public void emptyWord() {
+		// save last word
+		StringBuilder b = new StringBuilder();
+		for (int i= 0; i < word.size(); i++)
+		{
+			b.append(word.get(i));
+		}
+		lastWord = b.toString();
+
+		word.clear();
+	}
+
+	public boolean isValidWord() {
+		// String[] s = {"word"};
+		// Cursor c = dbDictionary.getWordMatches(word.toString(), null);
+		String cmp = "";
+		StringBuilder b = new StringBuilder();
+		for (int i= 0; i < word.size(); i++)
+		{
+			b.append(word.get(i));
+		}
+		Cursor c = dbDictionary.wordQuery(b.toString());
+		// Log.d(TAG, "DATABASE: " + dumpCursorToString(c));
+		/*
+		 * if (c != null && (c.getCount() > 0)) { c.moveToFirst(); cmp =
+		 * c.getString(0); }
+		 */
+		if (c != null) {
+			if (c.moveToFirst()) {
+				if (c.getCount() > 0)
+					cmp = c.getString(0);
+			}
+		}
+		/*
+		 * if (c != null && c.getCount() > 0) cmp = c.getString(0);
+		 */
+		if (cmp == word.toString())
+			return true;
+		else
+			return false;
+	}
+
+	public void popUpPauseAlert() {
+		new AlertDialog.Builder(this).setTitle(R.string.boggle_pause)
+				.setItems(R.array.pause, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialoginterface, int i) {
+						switch (i) {
+						case 0:
+							// timer.notify();
+							break;
+						case 1:
+							finish();
+							break;
+						default:
+							break;
+						}
+					}
+				}).show();
+	}
+
+	public void popUpFinishAlert() {
+		new AlertDialog.Builder(this)
+				.setTitle(R.string.boggle_time_up)
+				.setItems(R.array.time_up,
+						new DialogInterface.OnClickListener() {
+							public void onClick(
+									DialogInterface dialoginterface, int i) {
+								switch (i) {
+								case 0:
+								case 1:
+									finish();
+									break;
+								}
+							}
+						}).show();
 	}
 }

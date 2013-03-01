@@ -55,8 +55,13 @@ row, each column, and each of the 3x3 boxes
     <string name="four_label">4 X 4</string>
     <string name="five_label">5 X 5</string>
     <string name="six_label">6 X 6</string>
+    <string name="boggle_resume">RESUME</string>
+    <string name="boggle_quit">QUIT</string>
+    <string name="boggle_new_game">NEW GAME</string>
     <string name="boggle_settings_button_label">Settings</string>
     <string name="title_activity_boggle_acknowledgements">Boggle Acknowledgements</string>
+    <string name="boggle_time_up">Time\'s UP!</string>
+    <string name="boggle_pause">Paused!</string>
     <string name="boggle_acknowledgements">\
 I would like to acknowledge the creators of
 the sample code within the Android SDK. For
