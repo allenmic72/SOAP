@@ -62,6 +62,7 @@ row, each column, and each of the 3x3 boxes
     <string name="title_activity_boggle_acknowledgements">Boggle Acknowledgements</string>
     <string name="boggle_time_up">Time\'s UP!</string>
     <string name="boggle_pause">Paused!</string>
+    <string name="multiplayer_boggle_button_title">Multiplayer Boggle</string>
     <string name="boggle_acknowledgements">\
 I would like to acknowledge the creators of
 the sample code within the Android SDK. For

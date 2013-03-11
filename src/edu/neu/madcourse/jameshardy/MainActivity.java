@@ -1,5 +1,6 @@
 package edu.neu.madcourse.jameshardy;
 
+import edu.neu.madcourse.jameshardy.MultiplayerBoggle.*;
 import edu.neu.madcourse.jameshardy.Boggle.*;
 import edu.neu.madcourse.jameshardy.Sudoku.*;
 import edu.neu.mobileClass.*;
@@ -19,7 +20,7 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.main_launch_window);
         
         //DON'T FORGET TO ADD THIS IN
-        //PhoneCheckAPI.doAuthorization(this);
+        PhoneCheckAPI.doAuthorization(this);
         
         View teamMembersButton = findViewById(R.id.team_members_button);
         teamMembersButton.setOnClickListener(this);
@@ -29,6 +30,9 @@ public class MainActivity extends Activity implements OnClickListener {
         
         View boggleButton = findViewById(R.id.boggle_button);
         boggleButton.setOnClickListener(this);
+        
+        View multiplayerBoggleButton = findViewById(R.id.multiplayer_boggle_button);
+        multiplayerBoggleButton.setOnClickListener(this);
         
         View crashButton = findViewById(R.id.crash_button);
         crashButton.setOnClickListener(this);
@@ -66,6 +70,10 @@ public class MainActivity extends Activity implements OnClickListener {
     		break;
     	case R.id.boggle_button:
     		i = new Intent(this, Boggle.class);
+    		startActivity(i);
+    		break;
+    	case R.id.multiplayer_boggle_button:
+    		i = new Intent(this, MultiplayerBoggle.class);
     		startActivity(i);
     		break;
     	case R.id.crash_button:
