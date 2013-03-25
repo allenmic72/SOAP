@@ -20,7 +20,7 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.main_launch_window);
         
         //DON'T FORGET TO ADD THIS IN
-        PhoneCheckAPI.doAuthorization(this);
+        //PhoneCheckAPI.doAuthorization(this);
         
         View teamMembersButton = findViewById(R.id.team_members_button);
         teamMembersButton.setOnClickListener(this);

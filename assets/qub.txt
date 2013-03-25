@@ -1,0 +1,5 @@
+qubba
+qubit
+qubits
+qubyte
+qubytes

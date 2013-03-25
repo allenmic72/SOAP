@@ -22,9 +22,4 @@ public class TeamMembersActivity extends Activity {
         textOut.setText("Device ID: " + devId);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_team_members, menu);
-        return true;
-    }
 }

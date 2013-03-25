@@ -170,7 +170,7 @@ public class BoardView extends View {
 		Paint scoreText = new Paint();
 		scoreText.setColor(Color.BLACK);
 		scoreText.setTextSize(20);
-		canvas.drawText("SCORE IS: ", 300, 630, scoreText);
+		canvas.drawText("SCORE IS: " + game.scoreStr, 300, 630, scoreText);
 
 		// Draw last word text
 		Paint lastText = new Paint();
@@ -219,6 +219,7 @@ public class BoardView extends View {
 			Rect temp = new Rect(selRect);
 			recList.add(temp);
 			invalidate();// may change hints
+			
 		} else {
 			// Number is not valid for this tile
 			Log.d(TAG, "setSelectedTile: invalid: x " + selX + " " + selY);
@@ -298,8 +299,10 @@ public class BoardView extends View {
 		// TODO acknowledge word and call search/check
 		if (game.isValidWord()) {
 			game.lastWordValid = "YES";
+			BoggleSounds.play(game, R.raw.jumping);
 		} else {
 			game.lastWordValid = "NO";
+			BoggleSounds.play(game, R.raw.snare);
 			startAnimation(AnimationUtils.loadAnimation(game, R.anim.shake));
 		}
 

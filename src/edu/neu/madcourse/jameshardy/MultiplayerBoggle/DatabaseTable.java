@@ -92,6 +92,7 @@ public class DatabaseTable {
 
 		private void loadWords() throws IOException {
 			final Resources resources = mHelperContext.getResources();
+			/*
 			InputStream inputStream = resources.openRawResource(R.raw.wordlist);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					inputStream));
@@ -112,6 +113,7 @@ public class DatabaseTable {
 			} finally {
 				reader.close();
 			}
+			*/
 		}
 
 		public long addWord(String word) {

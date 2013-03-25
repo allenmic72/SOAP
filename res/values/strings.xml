@@ -49,8 +49,10 @@ row, each column, and each of the 3x3 boxes
     <!-- BOGGLE RESOURCES -->
     <string name="boggle_main_title">Boggle on Droids</string>
     <string name="boggle_game_title">Boggle</string>
+    <string name="boggle_pause_title">Game Paused!</string>
     <string name="boggle_new_game_title">Grid Size</string>
     <string name="boggle_new_game_button_title">New Game</string>
+    <string name="boggle_resume_game_button_title">Resume Game</string>
     <string name="boggle_acknowledgements_button_title">Acknowledgements</string>
     <string name="four_label">4 X 4</string>
     <string name="five_label">5 X 5</string>

@@ -1,5 +1,9 @@
 package edu.neu.madcourse.jameshardy.Boggle;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,11 +20,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -28,6 +36,8 @@ public class BoggleGame extends Activity {
 	private static final String TAG = "Boggle";
 
 	public static final String GRID_SIZE = "edu.neu.madcourse.jameshardy.boggle.grid_size";
+	private static final String PREFS_GAME_DATA = "BogglePrefs";
+	private static final String PREFS_TIMER = "timerMilisecs";
 	private static final String PREF_BOARD = "board";
 	public static final int GRID_FOUR = 4;
 	public static final int GRID_FIVE = 5;
@@ -40,16 +50,16 @@ public class BoggleGame extends Activity {
 	private String[] board;
 	private List<String> word;
 	public String lastWord = "";
+	public String scoreStr = "0";
+	private int score;
 	public String lastWordValid = "NO";
 	private List<String> acceptedWords;
 	private int grid_dim;
 	public String mTimerString;
 	public CountDownTimer timer;
+	private long millisecLeft;
 
-	// WordHelper helper = null;
-	// Cursor dataset_cursor = null;
-	DatabaseTable dbDictionary;
-	// WordsDatabase db;
+	// DatabaseTable dbDictionary;
 
 	private BoardView boardView;
 
@@ -62,7 +72,11 @@ public class BoggleGame extends Activity {
 		// size comes through as 0,1,2
 		size += 4;
 		grid_dim = size;
+		
+		millisecLeft = 0;
 
+		//init score to 0
+		score = 0; 
 		// TODO add case based on size of board chance init
 		initDice(grid_dim);
 
@@ -77,21 +91,9 @@ public class BoggleGame extends Activity {
 		boardView.requestFocus();
 
 		// load dictionary
-		dbDictionary = new DatabaseTable(this);
-		dbDictionary.open();
-		// db = new WordsDatabase(this);
-		// db.open();
-		// String[] s = {"word"};
-		// Cursor c = dbDictionary.getWordMatches("hello", null);
+		// dbDictionary = new DatabaseTable(this);
+		// dbDictionary.open();
 
-		// Cursor c = dbDictionary.wordQuery("hello");
-		// Log.d(TAG, "DATABASE: " + dumpCursorToString(c));
-		/*
-		 * if (c != null) { c.moveToFirst(); }
-		 */
-
-		// String s = c.getString(0);
-		// String s = dbDictionary.wordQuery("hello");
 		mTimerString = "";
 		timer = new CountDownTimer(120000, 1000) {
 			public void onTick(long millisUntilFinished) {
@@ -114,6 +116,7 @@ public class BoggleGame extends Activity {
 
 		Arrays.fill(usedLetters, false);
 		word = new ArrayList();
+		acceptedWords = new ArrayList();
 
 		// If the activity is restarted, do a continue next time
 		getIntent().putExtra(GRID_SIZE, GRID_CONTINUE);
@@ -123,6 +126,27 @@ public class BoggleGame extends Activity {
 	protected void onResume() {
 		super.onResume();
 		// Music.play(this, R.raw.sudoku_game);
+		/*
+		long ms = 0;
+		SharedPreferences gameData = getSharedPreferences(PREFS_GAME_DATA, 0);
+		gameData.getLong(PREFS_TIMER, ms);
+		mTimerString = "";
+		timer = new CountDownTimer(ms, 1000) {
+			public void onTick(long millisUntilFinished) {
+				mTimerString = "seconds remaining: "
+						+ (millisUntilFinished / 1000);
+				boardView.invalidate();
+			}
+
+			public void onFinish() {
+				mTimerString = "Time's Up!";
+				boardView.invalidate();
+
+				popUpFinishAlert();
+			}
+		}.start();
+		*/
+
 	}
 
 	@Override
@@ -135,13 +159,22 @@ public class BoggleGame extends Activity {
 		 * getPreferences(MODE_PRIVATE).edit().putString(PREF_PUZZLE,
 		 * toPuzzleString(puzzle)).commit();
 		 */
-
+		/*
+		long ms = 0; 
+		timer.onTick(ms);
+		timer.cancel();
+		*/
+		SharedPreferences gameData = getSharedPreferences(PREFS_GAME_DATA, 0);
+		SharedPreferences.Editor editor = gameData.edit();
+		editor.putLong(PREFS_TIMER, millisecLeft);
+		editor.commit();
+		
 	}
 
 	@Override
 	protected void onDestroy() {
-		dbDictionary.closeDB();
-
+		// close database
+		// dbDictionary.closeDB();
 		super.onDestroy();
 	}
 
@@ -324,8 +357,7 @@ public class BoggleGame extends Activity {
 	public void emptyWord() {
 		// save last word
 		StringBuilder b = new StringBuilder();
-		for (int i= 0; i < word.size(); i++)
-		{
+		for (int i = 0; i < word.size(); i++) {
 			b.append(word.get(i));
 		}
 		lastWord = b.toString();
@@ -336,42 +368,104 @@ public class BoggleGame extends Activity {
 	public boolean isValidWord() {
 		// String[] s = {"word"};
 		// Cursor c = dbDictionary.getWordMatches(word.toString(), null);
-		String cmp = "";
-		StringBuilder b = new StringBuilder();
-		for (int i= 0; i < word.size(); i++)
-		{
-			b.append(word.get(i));
-		}
-		Cursor c = dbDictionary.wordQuery(b.toString());
-		// Log.d(TAG, "DATABASE: " + dumpCursorToString(c));
 		/*
-		 * if (c != null && (c.getCount() > 0)) { c.moveToFirst(); cmp =
-		 * c.getString(0); }
+		 * Valid words are only 3 letters or larger
 		 */
-		if (c != null) {
-			if (c.moveToFirst()) {
-				if (c.getCount() > 0)
-					cmp = c.getString(0);
+		if (word.size() >= 3) {
+			char fTLS[] = new char[3];
+			StringBuilder fullWord = new StringBuilder();
+			for (int i = 0; i < word.size(); i++) {
+				fullWord.append(word.get(i));
 			}
-		}
-		/*
-		 * if (c != null && c.getCount() > 0) cmp = c.getString(0);
-		 */
-		if (cmp == word.toString())
-			return true;
-		else
+
+			StringBuilder fTLsb = new StringBuilder();
+			for (int i = 0; i < 3; i++) {
+				fTLsb.append(word.get(i));
+			}
+
+			//build filename from first three letters
+			fTLsb.getChars(0, 3, fTLS, 0);
+			
+			String fileName = new String(fTLS);
+			fileName = fileName + ".txt";
+			fileName = fileName.toLowerCase();
+			
+			
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(this.getAssets().open(fileName)));
+				
+				try {
+					String line;
+					while ((line = reader.readLine()) != null) {
+						if (line.equals(fullWord.toString().toLowerCase()))
+						{
+							if (score()) //calc and print new score
+								return true; 
+							else  //word was already used
+								return false;
+						}
+					}
+				} finally {
+					reader.close();
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				Log.d(TAG, "Dictionary FILE did not exist");
+				return false;
+			}
+			
+			
+			return false;
+		} else
 			return false;
 	}
+	
+	protected boolean score() 
+	{
+		/*
+		 * Scoring Scheme:
+		 * 3 letters = 1
+		 * 4 letters = 2
+		 * 5 letters = 3
+		 * 6 letters = 4
+		 * etc...
+		 */
+		StringBuilder fullWord = new StringBuilder();
+		for (int i = 0; i < word.size(); i++) {
+			fullWord.append(word.get(i));
+		}
+		String currWord = new String(fullWord.toString().toLowerCase());
+		if (acceptedWords.contains(currWord))
+		{
+			//don't score because word's already been used.
+			return false;
+		}
+		else {
+			acceptedWords.add(currWord);
+			score += (word.size() - 2); 
+			scoreStr = Integer.toString(score);
+		}
+		return true;
+	}
 
+	/*
+	 * TODO put this into a new activity. Start new activity with simple screen 
+	 * showing resume or quit buttons. This puts game activity on pause where can
+	 * save bundle with letters, time, words, and score such that when resume, 
+	 * resume with saved data.
+	 */
+	/*
 	public void popUpPauseAlert() {
 		new AlertDialog.Builder(this).setTitle(R.string.boggle_pause)
 				.setItems(R.array.pause, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
 						switch (i) {
-						case 0:
+						case 0: //RESUME
 							// timer.notify();
 							break;
-						case 1:
+						case 1: //QUIT
 							finish();
 							break;
 						default:
@@ -379,6 +473,14 @@ public class BoggleGame extends Activity {
 						}
 					}
 				}).show();
+	}
+	*/
+	public void popUpPauseAlert() {
+		//timer.onTick(millisecLeft);
+		//timer.cancel();
+		
+		Intent i = new Intent(this, BogglePaused.class);
+		startActivity(i);
 	}
 
 	public void popUpFinishAlert() {

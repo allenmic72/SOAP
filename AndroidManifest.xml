@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.jameshardy"
-    android:versionCode="3"
-    android:versionName="1.2" >
+    android:versionCode="4"
+    android:versionName="1.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -60,6 +60,10 @@
         <!-- BOGGLE ACTIVITIES -->
         <activity
             android:name=".Boggle.BoggleGame"
+            android:label="@string/boggle_game_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Boggle.BogglePaused"
             android:label="@string/boggle_game_title"
             android:screenOrientation="portrait" />
         <activity
