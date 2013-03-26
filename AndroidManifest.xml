@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.jameshardy"
-    android:versionCode="4"
-    android:versionName="1.3" >
+    android:versionCode="5"
+    android:versionName="1.4" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -106,7 +107,13 @@
             android:label="@string/boggle_game_title"
             android:theme="@android:style/Theme.Black"
             android:screenOrientation="portrait" />
-          
+          <receiver android:name=".MultiplayerBoggle.MP_BoggleReceiver" >
+              <intent-filter>
+                  <action android:name="android.intent.action.DATA_SMS_RECEIVED" />
+                  	<data android:scheme="sms" />
+                 	<data android:port="50009" />
+              </intent-filter>
+          </receiver>
         <activity
             android:name=".MultiplayerBoggle.BoggleAcknowledgements"
             android:label="@string/title_activity_boggle_acknowledgements"

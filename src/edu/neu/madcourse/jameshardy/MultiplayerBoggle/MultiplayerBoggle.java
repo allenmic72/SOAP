@@ -147,6 +147,10 @@ public class MultiplayerBoggle extends Activity implements OnClickListener {
 			break;
 		case R.id.mp_boggle_challenge_button:
 			i = new Intent(this, MP_BoggleChallengeUser.class);
+			Bundle b = new Bundle();
+			b.putString(USER_NAME, userName);
+			b.putString(PHONE_NUM, phoneNum);
+			i.putExtras(b);
 			startActivity(i);
 		case R.id.boggle_exit_button:
 			finish();
