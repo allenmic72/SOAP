@@ -121,10 +121,11 @@ public class MP_BoggleChallengeUser extends ListActivity {
         
         //TODO
         String newGameID = userName+user.getName();
+        byte[] bytes = newGameID.getBytes();
         
 		SmsManager sms = SmsManager.getDefault();
 		sms.sendTextMessage(user.getNumber(), null, "Invitation to game: " + newGameID, null, deliveredPI);
-		//sms.sendDataMessage(user.getNumber(), null, 50009, user, null, deliveredPI);
+		//sms.sendDataMessage(user.getNumber(), null, (short)50009, bytes, null, null);
 	
 	}
 	

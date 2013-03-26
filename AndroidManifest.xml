@@ -107,11 +107,20 @@
             android:label="@string/boggle_game_title"
             android:theme="@android:style/Theme.Black"
             android:screenOrientation="portrait" />
+          <!--  
           <receiver android:name=".MultiplayerBoggle.MP_BoggleReceiver" >
               <intent-filter>
                   <action android:name="android.intent.action.DATA_SMS_RECEIVED" />
                   	<data android:scheme="sms" />
                  	<data android:port="50009" />
+              </intent-filter>
+          </receiver>
+          -->
+          <receiver 
+              android:name=".MultiplayerBoggle.MP_BoggleReceiver" 
+              android:exported="false" >
+              <intent-filter>
+                  <action android:name="android.provider.telephony.SMS_RECEIVED" />
               </intent-filter>
           </receiver>
         <activity

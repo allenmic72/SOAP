@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 public class MP_BoggleReceiver extends BroadcastReceiver {
 
@@ -21,26 +22,41 @@ public class MP_BoggleReceiver extends BroadcastReceiver {
 		Bundle bundle = intent.getExtras();
 		SmsMessage[] msgs = null;
 
-		if (bundle != null) {
-			// received SMS
-			
-			 NotificationCompat.Builder mBuilder = new
-			 NotificationCompat.Builder(context)
-			 .setSmallIcon(R.drawable.ic_notification_overlay)
-			 .setContentTitle("My Notification")
-			 .setContentText("HELLO RECEIVED SMS DATA MSG");
+		Log.d("BOGGLE", "RECEIVED SMS");
+		// received SMS
 
-			NotificationManager notificationManager = 
-					(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				context).setSmallIcon(R.drawable.ic_notification_overlay)
+				.setContentTitle("My Notification")
+				.setContentText("HELLO RECEIVED SMS DATA MSG");
 
-			// Hide the notification after its selected
-			//noti.flags |= Notification.FLAG_AUTO_CANCEL;
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 
-			notificationManager.notify(0, mBuilder.build());
-		}
+		// Hide the notification after its selected
+		// noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+		notificationManager.notify(0, mBuilder.build());
+
+		/*
+		 * if (bundle != null) { // received SMS
+		 * 
+		 * NotificationCompat.Builder mBuilder = new
+		 * NotificationCompat.Builder(context)
+		 * .setSmallIcon(R.drawable.ic_notification_overlay)
+		 * .setContentTitle("My Notification")
+		 * .setContentText("HELLO RECEIVED SMS DATA MSG");
+		 * 
+		 * NotificationManager notificationManager =
+		 * (NotificationManager)context
+		 * .getSystemService(Context.NOTIFICATION_SERVICE);
+		 * 
+		 * // Hide the notification after its selected //noti.flags |=
+		 * Notification.FLAG_AUTO_CANCEL;
+		 * 
+		 * notificationManager.notify(0, mBuilder.build()); }
+		 */
 
 	}
-
-
 
 }
