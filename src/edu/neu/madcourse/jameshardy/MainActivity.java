@@ -73,8 +73,18 @@ public class MainActivity extends Activity implements OnClickListener {
     		startActivity(i);
     		break;
     	case R.id.multiplayer_boggle_button:
-    		i = new Intent(this, MultiplayerBoggle.class);
-    		startActivity(i);
+    		/*
+    		if (MultiplayerBoggle.userName.length() == 0) {
+    			i = new Intent(this, MP_BoggleCreateUser.class);
+    			startActivity(i);
+    		}
+    		else {
+    			i = new Intent(this, MultiplayerBoggle.class);
+        		startActivity(i);
+    		}
+    		*/
+    		i = new Intent(this, MP_BoggleCreateUser.class);
+			startActivity(i);
     		break;
     	case R.id.crash_button:
     		i = new Intent(this, CrashActivity.class);

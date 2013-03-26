@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_DATA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -44,6 +45,11 @@
             android:name=".CrashActivity"
             android:label="@string/title_activity_crash" >
         </activity>
+        <activity
+            android:name=".MultiplayerBoggle.MultiplayerBoggle"
+            android:label="@string/boggle_main_title"
+            android:theme="@android:style/Theme.Black" >
+        </activity>
         <!-- SUDOKU ACTIVITIES -->
         <activity
             android:name=".Sudoku.About"
@@ -71,6 +77,42 @@
             android:label="@string/title_activity_boggle_acknowledgements"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
+        <!-- MULTIPLAYER BOGGLE ACTIVITIES -->
+        <activity
+            android:name=".MultiplayerBoggle.BoggleGame"
+            android:label="@string/boggle_game_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiplayerBoggle.BogglePaused"
+            android:label="@string/boggle_game_title"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiplayerBoggle.MP_BoggleCreateUser"
+            android:label="@string/boggle_game_title"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MultiplayerBoggle.MP_BoggleChallengeUser"
+            android:label="@string/boggle_game_title"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+         <activity
+            android:name=".MultiplayerBoggle.MP_BoggleRules"
+            android:label="@string/boggle_game_title"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+          <activity
+            android:name=".MultiplayerBoggle.MP_BoggleHighScores"
+            android:label="@string/boggle_game_title"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+          
+        <activity
+            android:name=".MultiplayerBoggle.BoggleAcknowledgements"
+            android:label="@string/title_activity_boggle_acknowledgements"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        
     </application>
 
 </manifest>

@@ -5,9 +5,8 @@ import java.util.*;
 import edu.neu.madcourse.jameshardy.R;
 import edu.neu.madcourse.jameshardy.R.anim;
 import edu.neu.madcourse.jameshardy.R.color;
-//import edu.neu.madcourse.jameshardy.Boggle.BoggleGame;
-//import edu.neu.madcourse.jameshardy.Boggle.DatabaseSingleton;
 import edu.neu.madcourse.jameshardy.MultiplayerBoggle.BoggleGame;
+//import edu.neu.madcourse.jameshardy.Boggle.DatabaseSingleton;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -58,9 +57,13 @@ public class BoardView extends View {
 
 		// Get the grid_size from the user select, since theres three
 		// selections 0,1,2 add four to each one to get grid size
+		/*
 		grid_size = this.game.getIntent().getIntExtra(game.GRID_SIZE,
 				game.GRID_FOUR);
 		grid_size += 4;
+		*/
+		Bundle b = game.getIntent().getExtras();
+		grid_size = b.getInt(game.GRID_SIZE);
 
 		recList = new ArrayList();
 		mPath = new Path();
@@ -171,7 +174,7 @@ public class BoardView extends View {
 		Paint scoreText = new Paint();
 		scoreText.setColor(Color.BLACK);
 		scoreText.setTextSize(20);
-		canvas.drawText("SCORE IS: ", 300, 630, scoreText);
+		canvas.drawText("SCORE IS: " + game.scoreStr, 300, 630, scoreText);
 
 		// Draw last word text
 		Paint lastText = new Paint();
@@ -186,14 +189,17 @@ public class BoardView extends View {
 		canvas.drawText("Valid Word: " + game.lastWordValid, 50, 630, isValidText);
 
 		// Draw Pause and Quit Buttons
+		/*
 		Paint pauseBtn = new Paint();
 		pauseBtn.setColor(getResources().getColor(R.color.puzzle_background));
 		canvas.drawRect(50, 700, 200, 800, pauseBtn);
+		*/
 
 		Paint quitBtn = new Paint();
 		quitBtn.setColor(getResources().getColor(R.color.puzzle_background));
 		canvas.drawRect(300, 700, 450, 800, quitBtn);
 
+		/*
 		// pause button text
 		Paint pauseText = new Paint(Paint.ANTI_ALIAS_FLAG);
 		pauseText.setColor(getResources().getColor(R.color.puzzle_foreground));
@@ -202,6 +208,7 @@ public class BoardView extends View {
 		pauseText.setTextScaleX(150 / 100);
 		pauseText.setTextAlign(Paint.Align.CENTER);
 		canvas.drawText("PAUSE", 125, 750, pauseText);
+		*/
 		// quit button text
 		Paint quitText = new Paint(Paint.ANTI_ALIAS_FLAG);
 		quitText.setColor(getResources().getColor(R.color.puzzle_foreground));
@@ -220,6 +227,7 @@ public class BoardView extends View {
 			Rect temp = new Rect(selRect);
 			recList.add(temp);
 			invalidate();// may change hints
+			
 		} else {
 			// Number is not valid for this tile
 			Log.d(TAG, "setSelectedTile: invalid: x " + selX + " " + selY);
@@ -299,8 +307,10 @@ public class BoardView extends View {
 		// TODO acknowledge word and call search/check
 		if (game.isValidWord()) {
 			game.lastWordValid = "YES";
+			BoggleSounds.play(game, R.raw.jumping);
 		} else {
 			game.lastWordValid = "NO";
+			BoggleSounds.play(game, R.raw.snare);
 			startAnimation(AnimationUtils.loadAnimation(game, R.anim.shake));
 		}
 
@@ -321,22 +331,16 @@ public class BoardView extends View {
 		float x = event.getX();
 		float y = event.getY();
 
+		//ELIMINATED PAUSE FOR MULTIPLAYER
+		/*
 		// PAUSE BUTTON 50, 700, 200, 800
 		if (((int) x > 50 && (int) x < 200)
 				&& ((int) y > 700 && (int) y < 800)) {
 			
-			/*
-			try {
-				game.timer.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
 			game.popUpPauseAlert();
 			return true;
 		}
-		
+		*/
 		// QUIT BUTTON
 		if (((int) x > 300 && (int) x < 450)
 				&& ((int) y > 700 && (int) y < 800)) {

@@ -51,7 +51,16 @@ row, each column, and each of the 3x3 boxes
     <string name="boggle_game_title">Boggle</string>
     <string name="boggle_pause_title">Game Paused!</string>
     <string name="boggle_new_game_title">Grid Size</string>
+    <string name="boggle_settings_title">Grid Size</string>
+    <string name="mp_boggle_single_player">Single Player</string>
+    <string name="mp_boggle_set_board_size">Set Board Size</string>
+    <string name="mp_boggle_rules_button_title">Rules</string>
+    <string name="mp_boggle_high_score">High Scores</string>
+    <string name="mp_boggle_create_user_title">Create Username / Login</string>
     <string name="boggle_new_game_button_title">New Game</string>
+    <string name="mp_boggle_challenge_user_title">Choose an Opponent</string>
+    <string name="boggle_enter_button_title">ENTER</string>
+    <string name="mp_boggle_challenge_button_title">Challenge Someone</string>
     <string name="boggle_resume_game_button_title">Resume Game</string>
     <string name="boggle_acknowledgements_button_title">Acknowledgements</string>
     <string name="four_label">4 X 4</string>
@@ -71,9 +80,21 @@ the sample code within the Android SDK. For
 example the writers of <i>FingerPainting</i>.
 I would also like to acknowledge the Android 
 developer\'s website for their sample code in
-SQLite, local storage, and 2D graphics. Finally,
-I would like to thank the creators and writers
-of <i>Hello, Android</i> for their Sudoku code,
-which we have sampled. </string>
+SQLite, local storage, and 2D graphics. I would
+like to thank freesounds.org for their audio.
+Finally, I would like to thank the creators 
+and writers of <i>Hello, Android</i> for 
+their Sudoku code, which we have sampled. </string>
+	 <string name="mp_boggle_rules">\
+The rules are fairly simple. Sign in as you
+already have. Then you can choose to play single
+player or multi player. Both will work to help your
+high score. When choosing an opponent, simply
+click on the person you would like to play
+against. A message will be sent to them and
+when they accept, your game will begin. There
+is 1 point for the first three letters in any
+word and another point for each letter following.
+Can not use the same word twice. </string>
 
 </resources>

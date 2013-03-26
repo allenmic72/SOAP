@@ -323,6 +323,7 @@ public class BoardView extends View {
 		float x = event.getX();
 		float y = event.getY();
 
+		//ELIMINATED PAUSE FOR MULTIPLAYER
 		// PAUSE BUTTON 50, 700, 200, 800
 		if (((int) x > 50 && (int) x < 200)
 				&& ((int) y > 700 && (int) y < 800)) {

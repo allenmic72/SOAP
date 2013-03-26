@@ -126,26 +126,6 @@ public class BoggleGame extends Activity {
 	protected void onResume() {
 		super.onResume();
 		// Music.play(this, R.raw.sudoku_game);
-		/*
-		long ms = 0;
-		SharedPreferences gameData = getSharedPreferences(PREFS_GAME_DATA, 0);
-		gameData.getLong(PREFS_TIMER, ms);
-		mTimerString = "";
-		timer = new CountDownTimer(ms, 1000) {
-			public void onTick(long millisUntilFinished) {
-				mTimerString = "seconds remaining: "
-						+ (millisUntilFinished / 1000);
-				boardView.invalidate();
-			}
-
-			public void onFinish() {
-				mTimerString = "Time's Up!";
-				boardView.invalidate();
-
-				popUpFinishAlert();
-			}
-		}.start();
-		*/
 
 	}
 
@@ -159,15 +139,6 @@ public class BoggleGame extends Activity {
 		 * getPreferences(MODE_PRIVATE).edit().putString(PREF_PUZZLE,
 		 * toPuzzleString(puzzle)).commit();
 		 */
-		/*
-		long ms = 0; 
-		timer.onTick(ms);
-		timer.cancel();
-		*/
-		SharedPreferences gameData = getSharedPreferences(PREFS_GAME_DATA, 0);
-		SharedPreferences.Editor editor = gameData.edit();
-		editor.putLong(PREFS_TIMER, millisecLeft);
-		editor.commit();
 		
 	}
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:gravity="center"
+    android:padding="30dip">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="25dip"
+        android:text="@string/boggle_main_title"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/boggle_new_game_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mp_boggle_single_player" />
+
+    <Button
+        android:id="@+id/mp_boggle_challenge_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mp_boggle_challenge_button_title" />
+
+    <Button
+        android:id="@+id/boggle_settings_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mp_boggle_set_board_size" />
+
+    <Button
+        android:id="@+id/high_score_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mp_boggle_high_score" />
+
+    <Button
+        android:id="@+id/mp_boggle_rules_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/mp_boggle_rules_button_title" />
+
+    <Button
+        android:id="@+id/boggle_acknowledgements_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/boggle_acknowledgements_button_title" />
+
+    <Button
+        android:id="@+id/boggle_exit_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_label" />
+
+</LinearLayout>
