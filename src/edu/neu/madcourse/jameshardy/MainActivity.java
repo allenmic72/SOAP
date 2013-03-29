@@ -3,6 +3,7 @@ package edu.neu.madcourse.jameshardy;
 import edu.neu.madcourse.jameshardy.MultiplayerBoggle.*;
 import edu.neu.madcourse.jameshardy.Boggle.*;
 import edu.neu.madcourse.jameshardy.Sudoku.*;
+import edu.neu.madcourse.jameshardy.finalproject.*;
 import edu.neu.mobileClass.*;
 
 import android.os.Bundle;
@@ -36,6 +37,9 @@ public class MainActivity extends Activity implements OnClickListener {
         
         View crashButton = findViewById(R.id.crash_button);
         crashButton.setOnClickListener(this);
+        
+        View soapButton = findViewById(R.id.soap_gui_button);
+        soapButton.setOnClickListener(this);
         
         View exitButton = findViewById(R.id.exit_button);
         exitButton.setOnClickListener(this);
@@ -88,6 +92,11 @@ public class MainActivity extends Activity implements OnClickListener {
     		break;
     	case R.id.crash_button:
     		i = new Intent(this, CrashActivity.class);
+    		startActivity(i);
+    		break;
+    	case R.id.soap_gui_button:
+    		i = new Intent(this, SoapGUI.class);
+    		//i = new Intent(this, AccelerometerActivity.class);
     		startActivity(i);
     		break;
     	case R.id.exit_button:

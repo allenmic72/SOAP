@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.neu.madcourse.jameshardy"
-    android:versionCode="5"
-    android:versionName="1.4" >
+    android:versionCode="6"
+    android:versionName="1.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -128,6 +128,20 @@
             android:label="@string/title_activity_boggle_acknowledgements"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
+        <!-- SOAP ACTIVITIES -->
+        <activity
+            android:name=".finalproject.SoapGUI"
+            android:label="@string/soap_main_label"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+        
+        <activity
+            android:name=".finalproject.AccelerometerActivity"
+            android:label="@string/soap_main_label"
+            android:theme="@android:style/Theme.Black"
+            android:screenOrientation="portrait" />
+        
+        <service android:name="edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService" />
         
     </application>
 

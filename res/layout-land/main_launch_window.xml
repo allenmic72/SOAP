@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--  
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -96,7 +96,6 @@
             <Button
                 android:id="@+id/multiplayer_boggle_button"
                 android:text="Multiplayer Boggle" />
-
         </TableRow>
 
         <TableRow>
@@ -108,7 +107,13 @@
             <Button
                 android:id="@+id/crash_button"
                 android:text="@string/crash_button_title" />
+        </TableRow>
 
+        <TableRow>
+
+            <Button
+                android:id="@+id/soap_gui_button"
+                android:text="@string/soap_main_button" />
         </TableRow>
     </TableLayout>
 

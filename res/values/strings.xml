@@ -85,7 +85,7 @@ like to thank freesounds.org for their audio.
 Finally, I would like to thank the creators 
 and writers of <i>Hello, Android</i> for 
 their Sudoku code, which we have sampled. </string>
-	 <string name="mp_boggle_rules">\
+    <string name="mp_boggle_rules">\
 The rules are fairly simple. Sign in as you
 already have. Then you can choose to play single
 player or multi player. Both will work to help your
@@ -96,5 +96,11 @@ when they accept, your game will begin. There
 is 1 point for the first three letters in any
 word and another point for each letter following.
 Can not use the same word twice. </string>
+
+    <!-- SOAP RESOURCES -->
+    <string name="soap_main_button">Soap</string>
+    <string name="soap_start_service">Start Monitoring</string>
+    <string name="soap_main_label">Soap</string>
+    <string name="soap_kill_service">Stop Monitoring</string>
 
 </resources>

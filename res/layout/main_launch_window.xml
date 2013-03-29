@@ -91,7 +91,6 @@
             <Button
                 android:id="@+id/multiplayer_boggle_button"
                 android:text="@string/multiplayer_boggle_button_title" />
-
         </TableRow>
 
         <TableRow>
@@ -103,7 +102,13 @@
             <Button
                 android:id="@+id/crash_button"
                 android:text="@string/crash_button_title" />
+        </TableRow>
 
+        <TableRow>
+
+            <Button
+                android:id="@+id/soap_gui_button"
+                android:text="@string/soap_main_button" />
         </TableRow>
     </TableLayout>
 
