@@ -26,8 +26,10 @@ public class AccelerometerListenerService extends Service implements
 	private float last_x, last_y, last_z;
 
 	long lastEventTime = 0;
+	long curTime = 0;
 
 	private static final int SHAKE_THRESHOLD = 9;
+	private static final int Z_THRESHOLD = 20;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -70,17 +72,26 @@ public class AccelerometerListenerService extends Service implements
 		y = ev.values[1];
 		z = ev.values[2];
 
-		long curTime = System.currentTimeMillis();
+		curTime = System.currentTimeMillis();
 		// only allow one update every 100ms.
-		if ((curTime - lastEventTime) < 20) {
+		if ((curTime - lastEventTime) < 50) {
 			long diffTime = (curTime - lastEventTime);
 			lastEventTime = curTime;
 			float speed = Math.abs(x + y + z - last_x - last_y - last_z)
 					/ diffTime * 1000;
 
+			if (tap_count == 3) {
+				Log.d(TAG, "REGISTERED WASHED HANDS");
+				tap_count = 0;
+				IS_FIRST_TAP = true;
+			}
+			highPassFilter(x,y,z,diffTime);
+			
+			
 			// Log.d("sensor", "diff: " + diffTime + " - speed: " + speed);
 			if (speed > SHAKE_THRESHOLD) {
-				Log.d("sensor", "shake detected w/ speed: " + speed);
+				//Log.d(TAG, "Z = " + z);
+				//Log.d("sensor", "shake detected w/ speed: " + speed);
 				/*
 				Toast.makeText(this, "shake detected w/ speed: " + speed,
 						Toast.LENGTH_SHORT).show();
@@ -100,6 +111,140 @@ public class AccelerometerListenerService extends Service implements
 				+ " at:: " + x + " " + y + " " + z);
 				*/
 
+	}
+	private static final boolean ADAPTIVE_ACCEL_FILTER = true;
+	private static boolean POTENTIAL_TAP = false;
+	private static boolean IS_FIRST_TAP = true;
+	float lastAccel[] = new float[3];
+	float accelFilter[] = new float[3];
+	float prevAccelFilter[] = new float[3];
+	/*
+	float z_stack[] = new float[5];
+	private int stack_count = 0;
+	private int tap_count = 0;
+	private int registered_taps = 0;
+	*/
+	private int count_down = 6;
+	private int tap_count = 0;
+	private long start_time = 0;
+
+	/**
+	 * Adaptation of Apple's high pass filter Gotta be good since it's an apple
+	 * product
+	 * 
+	 * @param accelX
+	 * @param accelY
+	 * @param accelZ
+	 */
+	public void highPassFilter(float accelX, float accelY, float accelZ,
+			long diffTime) {
+		// high pass filter
+		float updateFreq = 30; // match this to your update speed
+		float cutOffFreq = 1.0f;
+		float RC = 1.0f / cutOffFreq;
+		float dt = 1.0f / updateFreq;
+		float filterConstant = RC / (dt + RC);
+		float alpha = filterConstant;
+		float kAccelerometerMinStep = 0.033f;
+		float kAccelerometerNoiseAttenuation = 3.0f;
+
+		if (ADAPTIVE_ACCEL_FILTER) {
+			float d = clamp(
+					Math.abs(norm(accelFilter[0], accelFilter[1],
+							accelFilter[2]) - norm(accelX, accelY, accelZ))
+							/ kAccelerometerMinStep - 1.0f, 0.0f, 1.0f);
+			alpha = d * filterConstant / kAccelerometerNoiseAttenuation
+					+ (1.0f - d) * filterConstant;
+		}
+
+		accelFilter[0] = (float) (alpha * (accelFilter[0] + accelX - lastAccel[0]));
+		accelFilter[1] = (float) (alpha * (accelFilter[1] + accelY - lastAccel[1]));
+		accelFilter[2] = (float) (alpha * (accelFilter[2] + accelZ - lastAccel[2]));
+
+		lastAccel[0] = accelX;
+		lastAccel[1] = accelY;
+		lastAccel[2] = accelZ;
+
+		/*
+		 * Log.d(TAG, Calendar.getInstance().getTime().getTime() - lastUpdate +
+		 * " at:: " + accelFilter[0] + " " + accelFilter[1] + " " +
+		 * accelFilter[2]);
+		 */
+		//MONITOR Z's
+		//Log.d(TAG, diffTime + " at:: " + accelFilter[2]);
+		
+		//processing middle to end of tap
+		if (POTENTIAL_TAP == true) {
+			if (count_down > 0) {
+				count_down--;
+				//end of Tap
+				if (Math.abs(accelFilter[2]) < .1) {
+					tap_count++;
+					//reset
+					count_down = 6;
+					POTENTIAL_TAP = false;
+					//start timing between taps
+					start_time = curTime;
+					IS_FIRST_TAP = false;
+				}
+			}
+			//not tap
+			else {
+				//reset
+				count_down = 5;
+				POTENTIAL_TAP = false;
+			}
+		}
+		
+		//handling beginning of tap
+		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 1.5) {
+			if (POTENTIAL_TAP == false) {
+				//start of Tap
+				if (Math.abs(prevAccelFilter[2]) < .1)
+				{
+					// mark as potential tap
+					POTENTIAL_TAP = true;
+					if (!IS_FIRST_TAP) {
+						if ((curTime - start_time) > 1000) {
+							// taps too far apart, treat as first tap
+							tap_count = 0;
+							IS_FIRST_TAP = true;
+						}
+					}
+					else {
+						//first tap, set to false after
+						IS_FIRST_TAP = false;
+					}
+				}
+			}
+			
+			/*
+			if (stack_count < 5) {
+				z_stack[stack_count] = Math.abs(accelFilter[2]);
+				stack_count++;
+			}
+			else
+				stack_count = 0;
+			*/
+			
+			//Log.d(TAG, diffTime + " at:: " + accelFilter[0] + " " + accelFilter[1] + " " + accelFilter[2]);
+		}
+		prevAccelFilter[0] = accelFilter[0];
+		prevAccelFilter[1] = accelFilter[1];
+		prevAccelFilter[2] = accelFilter[2];
+	}
+
+	private float norm(float x, float y, float z) {
+		return (float) Math.sqrt(x * x + y * y + z * z);
+	}
+
+	private float clamp(float v, float min, float max) {
+		if (v > max)
+			return max;
+		else if (v < min)
+			return min;
+		else
+			return v;
 	}
 
 }

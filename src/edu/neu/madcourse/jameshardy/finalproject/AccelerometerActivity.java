@@ -24,6 +24,7 @@ public class AccelerometerActivity extends Activity implements SensorListener {
 	private float x, y, z;
 	private float last_x, last_y, last_z;
 	private static final int SHAKE_THRESHOLD = 40;
+	private static final int Z_THRESHOLD = 20;
 
 	// 800 is the value for detecting the shake...if you raise the value than
 	// you
