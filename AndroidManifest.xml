@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -140,9 +142,13 @@
             android:label="@string/soap_main_label"
             android:theme="@android:style/Theme.Black"
             android:screenOrientation="portrait" />
-        
+        <activity
+            android:name=".finalproject.SoapAcknowledgements"
+            android:label="@string/soap_title_acknowledgements"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
+
         <service android:name="edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService" />
-        
-    </application>
+</application>
 
 </manifest>

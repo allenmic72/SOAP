@@ -98,9 +98,20 @@ word and another point for each letter following.
 Can not use the same word twice. </string>
 
     <!-- SOAP RESOURCES -->
-    <string name="soap_main_button">Soap</string>
+    <string name="soap_main_button">Trickiest Part</string>
     <string name="soap_start_service">Start Monitoring</string>
     <string name="soap_main_label">Soap</string>
     <string name="soap_kill_service">Stop Monitoring</string>
+    <string name="soap_ack_button_title">Acknowledgements</string>
+    <string name="soap_title_acknowledgements">SOAP Acknowledgements</string>
+    <string name="soap_acknowledgements">\
+We would like to acknowledge user MyLock
+on stackoverflow for providing us answers and code
+in order to keep our service running when the 
+screen locks and shuts off. Thank you to apple
+for high pass filter code so that we could 
+eliminate gravity from the accelerometer readings.
+ And thank you to AndroidGenuine for the accelerometer
+ tutorial. </string>
 
 </resources>
