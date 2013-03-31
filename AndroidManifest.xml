@@ -135,7 +135,12 @@
             android:name=".finalproject.SoapGUI"
             android:label="@string/soap_main_label"
             android:theme="@android:style/Theme.Black"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+              <intent-filter >
+                <action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         
         <activity
             android:name=".finalproject.AccelerometerActivity"
