@@ -6,7 +6,7 @@
  * We make no guarantees that this code is fit for any purpose. 
  * Visit http://www.pragmaticprogrammer.com/titles/eband3 for more book information.
 ***/
-package edu.neu.madcourse.jameshardy.Sudoku;
+package edu.neu.madcourse.jameshardy.sudoku;
 
 import android.content.Context;
 import android.media.MediaPlayer;

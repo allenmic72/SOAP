@@ -2,70 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
-    android:padding="40dp">
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    android:background="@color/soap_default_background"
+    >
     
     <TextView 
         android:id="@+id/soap_title"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:text="@string/soap_main_label"
-        android:textSize="32sp"
+        android:textSize="40sp"
         android:textColor="@color/soap_title_color"
         android:shadowColor="@color/text_shadow"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
         android:layout_alignParentTop="true"
         android:gravity="center"
         />
     
-    <Button 
-        android:id="@+id/soap_gui_start_service"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:text="@string/soap_start_service"
-        android:background="@drawable/button_selector"
-        android:shadowColor="@color/text_shadow"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
-        android:layout_centerVertical="true"
-        />
     
-    <Button 
-        android:id="@+id/soap_gui_kill_service"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:text="@string/soap_kill_service"
-        android:background="@drawable/button_selector"
-        android:shadowColor="@color/text_shadow"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
-        android:layout_below="@id/soap_gui_start_service"
-        />
-    <Button 
-        android:id="@+id/soap_acknowledgements_button"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:text="@string/soap_ack_button_title"
-        android:background="@drawable/button_selector"
-        android:shadowColor="@color/text_shadow"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
-        android:layout_below="@id/soap_gui_kill_service"
-        />
     <TextView
         android:id="@+id/soap_washcount_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/soap_acknowledgements_button" 
+        android:layout_centerVertical="true"
         android:textSize="24sp"
         android:textColor="@color/soap_title_color"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="1"
         android:shadowDy="1"
         android:shadowRadius="2" />
+    
+    <edu.neu.madcourse.jameshardy.finalproject.ActionBarView
+        android:id="@+id/soap_action_bar_view"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        />
     
 </RelativeLayout>

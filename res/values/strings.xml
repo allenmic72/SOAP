@@ -5,7 +5,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="welcome">Welcome To My App!</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">James Hardy</string>
+    <string name="main_title">James Hardy</string>
     <string name="title_activity_team_members">Team Members</string>
     <string name="team_members_button_title">Team Members</string>
     <string name="team_member_1_name">James Hardy</string>
@@ -99,9 +99,9 @@ Can not use the same word twice. </string>
 
     <!-- SOAP RESOURCES -->
     <string name="soap_main_button">Trickiest Part</string>
-    <string name="soap_start_service">Start Monitoring</string>
-    <string name="soap_main_label">Soap</string>
-    <string name="soap_kill_service">Stop Monitoring</string>
+    <string name="soap_start_service">START MONITORING</string>
+    <string name="soap_main_label">S  O  A  P</string>
+    <string name="soap_kill_service">STOP MONITORING</string>
     <string name="soap_ack_button_title">Acknowledgements</string>
     <string name="soap_title_acknowledgements">SOAP Acknowledgements</string>
     <string name="soap_acknowledgements">\
@@ -113,5 +113,7 @@ for high pass filter code so that we could
 eliminate gravity from the accelerometer readings.
  And thank you to AndroidGenuine for the accelerometer
  tutorial. </string>
+ 	<string name="soap_settings_button">SOAP SETTINGS</string>
+ 	<string name="soap_export_data_button">EXPORT DATA</string>
 
 </resources>

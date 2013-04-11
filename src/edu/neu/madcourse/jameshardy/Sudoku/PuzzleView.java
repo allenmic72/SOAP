@@ -7,12 +7,12 @@
  * Visit http://www.pragmaticprogrammer.com/titles/eband3 for more book information.
 ***/
 
-package edu.neu.madcourse.jameshardy.Sudoku;
+package edu.neu.madcourse.jameshardy.sudoku;
 
 import edu.neu.madcourse.jameshardy.R;
 import edu.neu.madcourse.jameshardy.R.anim;
 import edu.neu.madcourse.jameshardy.R.color;
-import edu.neu.madcourse.jameshardy.Sudoku.Game;
+import edu.neu.madcourse.jameshardy.sudoku.Game;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;

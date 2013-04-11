@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,36 +26,34 @@ public class SoapGUI extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.soap_gui);
 		
-		View startServiceButton = findViewById(R.id.soap_gui_start_service);
-		startServiceButton.setOnClickListener(this);
-		
-		View killServiceButton = findViewById(R.id.soap_gui_kill_service);
-		killServiceButton.setOnClickListener(this);
-		
-		View ackButton = findViewById(R.id.soap_acknowledgements_button);
-		ackButton.setOnClickListener(this);
+		Typeface helveticaLight = Typeface.createFromAsset(getAssets(), "helvetica_neue_light.ttf");
+		TextView soapTitle = (TextView) findViewById(R.id.soap_title);
+		soapTitle.setTypeface(helveticaLight);
 		
 	}
 
 	
 	public void onClick(View v) {
+		/*
 		switch (v.getId()) {
-		case R.id.soap_gui_start_service:
-			//Log.d("ACTIVITY", "START CLICKED");
-			Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
-			startService(startService); 
-			break;
-		case R.id.soap_gui_kill_service:
-			//Log.d("ACTIVITY", "STOP CLICKED");
-			Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
-			stopService(stopService); 
-			break;
+		
 		case R.id.soap_acknowledgements_button:
 			Intent ackActivity = new Intent(this, SoapAcknowledgements.class);
 			startActivity(ackActivity);
 			break;
 		}
+		*/
 		
+	}
+	
+	public void startService(){
+		Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+		startService(startService); 
+	}
+	
+	public void stopService(){
+		Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+		stopService(stopService); 
 	}
 	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
