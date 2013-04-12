@@ -94,7 +94,7 @@ public class Sudoku extends Activity implements OnClickListener {
    /** Ask the user what difficulty level they want */
    private void openNewGameDialog() {
       new AlertDialog.Builder(this)
-           .setTitle(R.string.new_game_title)
+           .setTitle(R.string.new_game_label)
            .setItems(R.array.difficulty,
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialoginterface,

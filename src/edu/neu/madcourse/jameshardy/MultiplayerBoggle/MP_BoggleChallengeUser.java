@@ -50,7 +50,7 @@ public class MP_BoggleChallengeUser extends ListActivity {
 		//List<MP_BoggleUser> mp_users;
 		
 		boolean gettingUser = false;
-		while (!gettingUser) {
+		while (!gettingUser){
 			if (KeyValueAPI.isServerAvailable())
 			{
 				Log.d(TAG, "adding user");
