@@ -41,12 +41,12 @@ public class SoapGUI extends Activity implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.soap_gui_start_service:
 			//Log.d("ACTIVITY", "START CLICKED");
-			Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+			Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.TapListenerService.class);
 			startService(startService); 
 			break;
 		case R.id.soap_gui_kill_service:
 			//Log.d("ACTIVITY", "STOP CLICKED");
-			Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+			Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.TapListenerService.class);
 			stopService(stopService); 
 			break;
 		case R.id.soap_acknowledgements_button:

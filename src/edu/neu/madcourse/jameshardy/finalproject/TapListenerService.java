@@ -31,9 +31,9 @@ import android.widget.Toast;
 
 import edu.neu.madcourse.jameshardy.finalproject.SoapGUI;
 
-public class AccelerometerListenerService extends Service implements
+public class TapListenerService extends Service implements
 		SensorEventListener {
-	private static final String TAG = "AccelerometerListener";
+	private static final String TAG = "TapListener";
 
 	//public static final String BROADCAST_ACTION = "edu.neu.madcourse.jameshardy.finalproject.send_count";
 	//public static final String HANDWASH_COUNT = "edu.neu.madcourse.jameshardy.finalproject.wash_count";
@@ -56,19 +56,21 @@ public class AccelerometerListenerService extends Service implements
 	private static final int SHAKE_THRESHOLD = 9;
 	private static final int Z_THRESHOLD = 20;
 
+	//TODO MAKE SURE TO ONLY REGISTER SERVICE ON SCREEN OFF
+	
 	// BroadcastReceiver for handling ACTION_SCREEN_OFF.
 	public BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// Check action just to be on the safe side.
+			//start listener when screens off
 			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-				Log.v("shake mediator screen off", "trying re-registration");
-				// Unregisters the listener and registers it again.
-				mSensorManager
-						.unregisterListener(AccelerometerListenerService.this);
 				mSensorManager.registerListener(
-						AccelerometerListenerService.this, mAccelerometer,
+						TapListenerService.this, mAccelerometer,
 						SensorManager.SENSOR_DELAY_GAME);
+			}
+			//stop listener when screens on
+			else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				mSensorManager.unregisterListener(TapListenerService.this);
 			}
 		}
 	};
@@ -87,21 +89,23 @@ public class AccelerometerListenerService extends Service implements
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mAccelerometer = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mSensorManager.registerListener(this, mAccelerometer,
-				SensorManager.SENSOR_DELAY_GAME);
-		//Log.d(TAG, "SERVICE STARTED");
+		//DONT start listener until screen off
+		//mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+		
+		Log.d(TAG, "SERVICE STARTED");
 		v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
 		mgr = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-		wakelock = mgr
-				.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MyWakeLock");
-		wakelock.acquire();
 
 		// Register our receiver for the ACTION_SCREEN_OFF action. This will
 		// make our receiver
 		// code be called whenever the phone enters standby mode.
-		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_SCREEN_ON);
 		registerReceiver(mReceiver, filter);
+		
 	}
 
 	@Override
@@ -110,9 +114,9 @@ public class AccelerometerListenerService extends Service implements
 		// Unregister our receiver.
         unregisterReceiver(mReceiver);
 		
+        //unregister receiver incase
 		mSensorManager.unregisterListener(this);
 		Log.d(TAG, "SERVICE onDestroy() called");
-		wakelock.release();
 	}
 
 	@Override
@@ -132,45 +136,35 @@ public class AccelerometerListenerService extends Service implements
 
 		curTime = System.currentTimeMillis();
 		// only allow one update every 100ms.
-		//try > 20 as well
 		if ((curTime - lastEventTime) < 50) {
 			long diffTime = (curTime - lastEventTime);
 			lastEventTime = curTime;
-			float speed = Math.abs(x + y + z - last_x - last_y - last_z)
-					/ diffTime * 1000;
-
+			
 			highPassFilter(x, y, z, diffTime);
 			
-			if (tap_count == 3) {
-				handwash_count++;
-				Log.d(TAG, "REGISTERED WASHED HANDS");
+			if (tap_count == 1) {
+				if (LISTEN_FOR_HANDSHAKE == true) {
+					long pattern[] = {0,300,200,300};
+					v.vibrate(pattern, -1);
+					//v.vibrate(2000);
+					tap_count = 0;
+					LISTEN_FOR_HANDSHAKE = false;
+					Log.d(TAG, "Hitting handshake");
+				} 
+			}
+			if (tap_count == 2) {
 				v.vibrate(300);
-
-				// broadcast update
-				Intent broadcast = new Intent();
-				Bundle b = new Bundle();
-				b.putInt(SoapGUI.HANDWASH_COUNT, handwash_count);
-				broadcast.putExtras(b);
-				broadcast.setAction(SoapGUI.BROADCAST_ACTION);
-				sendBroadcast(broadcast);
-
+				LISTEN_FOR_HANDSHAKE = true;
 				tap_count = 0;
-				IS_FIRST_TAP = true;
+				//IS_FIRST_TAP = true;
 			}
 
-			// Log.d("sensor", "diff: " + diffTime + " - speed: " + speed);
-			if (speed > SHAKE_THRESHOLD) {
-				// Log.d(TAG, "Z = " + z);
-				// Log.d("sensor", "shake detected w/ speed: " + speed);
-				/*
-				 * Toast.makeText(this, "shake detected w/ speed: " + speed,
-				 * Toast.LENGTH_SHORT).show();
-				 */
-			}
 			last_x = x;
 			last_y = y;
 			last_z = z;
-		} else {
+
+		} 
+		else {
 			lastEventTime = curTime;
 		}
 
@@ -182,6 +176,7 @@ public class AccelerometerListenerService extends Service implements
 	}
 
 	private static final boolean ADAPTIVE_ACCEL_FILTER = true;
+	private static boolean LISTEN_FOR_HANDSHAKE = false;
 	private static boolean POTENTIAL_TAP = false;
 	private static boolean IS_FIRST_TAP = true;
 	private static boolean REGISTERED_TAP = false;
@@ -195,6 +190,7 @@ public class AccelerometerListenerService extends Service implements
 	 */
 	private int count_down = 6;
 	private int tap_count = 0;
+	private long last_tap_time = 0;
 	private long start_time = 0;
 	private int handwash_count = 0;
 
@@ -234,29 +230,22 @@ public class AccelerometerListenerService extends Service implements
 		lastAccel[0] = accelX;
 		lastAccel[1] = accelY;
 		lastAccel[2] = accelZ;
-
-		/*
-		 * Log.d(TAG, Calendar.getInstance().getTime().getTime() - lastUpdate +
-		 * " at:: " + accelFilter[0] + " " + accelFilter[1] + " " +
-		 * accelFilter[2]);
-		 */
-
-		// MONITOR Z's
-		// Log.d(TAG, diffTime + " at:: " + accelFilter[2]);
-
-		// processing middle to end of tap
+		
 		if (POTENTIAL_TAP == true) {
 			if (count_down > 0) {
 				count_down--;
 				// end of Tap
 				if (Math.abs(accelFilter[2]) < .1) {
-					tap_count++;
-					// reset
+					if ((curTime - last_tap_time) > 500.0) {
+						tap_count++;
+						last_tap_time = curTime;
+						Log.d(TAG,"Recorded Tap");
+					}
+					//start_time = curTime;
+					//IS_FIRST_TAP = false;
+					//reset
 					count_down = 6;
 					POTENTIAL_TAP = false;
-					// start timing between taps
-					start_time = curTime;
-				    IS_FIRST_TAP = false;
 				}
 			}
 			// not tap
@@ -268,13 +257,14 @@ public class AccelerometerListenerService extends Service implements
 			}
 		}
 
-		// handling beginning of tap
-		if (Math.abs(accelFilter[2]) > .4 && Math.abs(accelFilter[2]) < 1.5) {
+		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 1.4 
+				&& Math.abs(accelFilter[1]) < .1 && Math.abs(accelFilter[0]) < .1) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
 				if (Math.abs(prevAccelFilter[2]) < .1) {
 					// mark as potential tap
 					POTENTIAL_TAP = true;
+					/*
 					if (!IS_FIRST_TAP) {
 						if ((curTime - start_time) > 1000.0) {
 							// taps too far apart, treat as first tap
@@ -285,32 +275,17 @@ public class AccelerometerListenerService extends Service implements
 						// first tap, set to false after
 						IS_FIRST_TAP = false;
 					}
+					*/
 				}
 			}
-
-		
-			/*
-			 * if (stack_count < 5) { z_stack[stack_count] =
-			 * Math.abs(accelFilter[2]); stack_count++; } else stack_count = 0;
-			 */
-
-			// Log.d(TAG, diffTime + " at:: " + accelFilter[0] + " " +
-			// accelFilter[1] + " " + accelFilter[2]);
 		}
-		
-		//if a tap was completed or a tap was incorrect, goes back to start
 		
 		if (FALSE_TAP == true) {
 			POTENTIAL_TAP = false;
 			FALSE_TAP = false;
 		}
-		/*
-		if (REGISTERED_TAP == true || FALSE_TAP == true) {
-			POTENTIAL_TAP = false;
-			REGISTERED_TAP = false;
-			FALSE_TAP = false;
-		}
-		*/
+		
+
 		
 		prevAccelFilter[0] = accelFilter[0];
 		prevAccelFilter[1] = accelFilter[1];
