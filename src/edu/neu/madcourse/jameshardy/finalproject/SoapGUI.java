@@ -47,12 +47,12 @@ public class SoapGUI extends Activity implements OnClickListener{
 	}
 	
 	public void startService(){
-		Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+		Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.TapListenerService.class);
 		startService(startService); 
 	}
 	
 	public void stopService(){
-		Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService.class);
+		Intent stopService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.TapListenerService.class);
 		stopService(stopService); 
 	}
 	
