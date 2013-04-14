@@ -32,6 +32,7 @@ public class ActionBarView extends View{
 	Paint focusedState;
 	Paint pressedState;
 	Paint buttonBorderColor;
+	int moveEventButtonId = -1;
 	private final SoapGUI soapGUI;
 	
 	public ActionBarView(Context context, AttributeSet attrs) {
@@ -98,16 +99,38 @@ public class ActionBarView extends View{
     
     @Override
     public boolean onTouchEvent(MotionEvent event){
+    	
     	float x = event.getX();
     	
     	int buttonNumber = determineWhichButtonWasPressed(x);
+    	//check if the touch occurred outside of the buttons
+    	if (buttonNumber < 0 
+    			|| buttonNumber > ACTION_BUTTON_COUNT - 1
+    			|| x <= 0
+    			|| event.getY() <= 0
+    			|| event.getY() >= viewHeight){
+    		if (moveEventButtonId != -1){
+    			buttonStates[moveEventButtonId] = defaultState;
+    			invalidate();
+    			moveEventButtonId = -1;
+    		}
+    		return false;
+    	}
     	Log.d("actionbarview", "button pressed: #" + buttonNumber);
     	
     	switch (event.getAction()){
+    	case MotionEvent.ACTION_OUTSIDE:
+    		if (moveEventButtonId != -1){
+    			buttonStates[moveEventButtonId] = defaultState;
+            	invalidate();
+            	moveEventButtonId = -1;
+    		}
+        	return false; 
         case MotionEvent.ACTION_DOWN:
         	Log.d("A", "down");
         	buttonStates[buttonNumber] = focusedState;
         	invalidate();
+        	moveEventButtonId = buttonNumber;
         	break;
         case MotionEvent.ACTION_UP:
         	Log.d("A", "up");
@@ -118,6 +141,18 @@ public class ActionBarView extends View{
         	invalidate();
         	createTimerToRemoveAnimationOnButtons(buttonNumber);
         	return false;
+        case MotionEvent.ACTION_MOVE:
+        	//if button touched before this move is different from current button,
+        	//reset last button touched to default and set the new one to focused
+        	if (moveEventButtonId != buttonNumber){
+        		buttonStates[buttonNumber] = focusedState;
+        		if (moveEventButtonId != -1){
+        			buttonStates[moveEventButtonId] = defaultState;
+        		}
+        		invalidate();
+        		moveEventButtonId = buttonNumber;
+        	}
+        	break;
     	}    	
 		return true;
     }
@@ -159,7 +194,7 @@ public class ActionBarView extends View{
 		
 		letterColor.setColor(getResources().getColor(
                 R.color.soap_action_button_text));
-	    letterColor.setStyle(Style.FILL);
+	    letterColor.setStyle(Style.FILL_AND_STROKE);
 	    letterColor.setTextAlign(Paint.Align.CENTER);
 	    letterColor.setTypeface(helveticaLight);
 	    letterColor.setShadowLayer(3, 2, 2, getResources().getColor(R.color.text_shadow));
