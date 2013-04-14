@@ -31,6 +31,7 @@
    <color name="soap_buttons_focused">#FF8FD6F0</color>
    <color name="soap_buttons_pressed">#FF33B5E5</color>
    <color name="soap_button_border">#FF4D4D4D</color>
+   <color name="pure_white">#FFFFFFFF</color>
        
    
 </resources>

@@ -30,19 +30,27 @@ public class SoapGUI extends Activity implements OnClickListener{
 		TextView soapTitle = (TextView) findViewById(R.id.soap_title);
 		soapTitle.setTypeface(helveticaLight);
 		
+		View backButton = findViewById(R.id.soap_back_button);
+		backButton.setOnClickListener(this);
+		
+		View helpButton = findViewById(R.id.soap_help_button);
+		helpButton.setOnClickListener(this);
 	}
 
 	
 	public void onClick(View v) {
-		/*
+		
 		switch (v.getId()) {
 		
-		case R.id.soap_acknowledgements_button:
+		case R.id.soap_help_button:
 			Intent ackActivity = new Intent(this, SoapAcknowledgements.class);
 			startActivity(ackActivity);
 			break;
+		case R.id.soap_back_button:
+			finish();
+			break;
 		}
-		*/
+		
 		
 	}
 	
