@@ -1,11 +1,14 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
+import java.util.Calendar;
+
 import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
 
 public class SoapGUI extends Activity implements OnClickListener{
 
@@ -75,7 +79,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			try {
 				b = intent.getExtras();
 				count = b.getInt(HANDWASH_COUNT);
-				updateTextField(count);
+				//updateTextField(count);
 			} catch (Exception e) {
 				Log.d(TAG, "EXCEPTION: " + e.toString());
 			}
@@ -87,6 +91,8 @@ public class SoapGUI extends Activity implements OnClickListener{
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_ACTION);
         registerReceiver(receiver, filter);
+        int washCountToday = getCurrentWashCountFromSpref();
+        updateTextField(washCountToday);
         super.onResume();
     }
 
@@ -105,5 +111,11 @@ public class SoapGUI extends Activity implements OnClickListener{
 		} else {
 			Log.d(TAG, "count is null");
 		}
+	}
+	
+	private int getCurrentWashCountFromSpref(){
+		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
+		String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
+		return spref.getInt(day, 0);
 	}
 }

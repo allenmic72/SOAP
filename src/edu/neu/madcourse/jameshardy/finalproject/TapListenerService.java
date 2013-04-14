@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import edu.neu.madcourse.jameshardy.R;
-import edu.neu.madcourse.jameshardy.MultiplayerBoggle.MP_BoggleUser;
 import edu.neu.mobileclass.apis.KeyValueAPI;
 
 import android.app.Service;
@@ -16,6 +15,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,10 +27,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import edu.neu.madcourse.jameshardy.finalproject.SoapGUI;
 
 public class TapListenerService extends Service implements
 		SensorEventListener {
@@ -37,6 +34,7 @@ public class TapListenerService extends Service implements
 
 	//public static final String BROADCAST_ACTION = "edu.neu.madcourse.jameshardy.finalproject.send_count";
 	//public static final String HANDWASH_COUNT = "edu.neu.madcourse.jameshardy.finalproject.wash_count";
+	public static final String SPREF = "soapPreferences";
 
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
@@ -150,6 +148,7 @@ public class TapListenerService extends Service implements
 					tap_count = 0;
 					LISTEN_FOR_HANDSHAKE = false;
 					Log.d(TAG, "Hitting handshake");
+					updateSharedPref();
 				} 
 			}
 			if (tap_count == 2) {
@@ -303,6 +302,22 @@ public class TapListenerService extends Service implements
 			return min;
 		else
 			return v;
+	}
+	
+	/**
+	 * updates the count for this day in the shared pref
+	 * the key value is the current day in the current year (1 - 365)
+	 */
+	private void updateSharedPref(){
+		Calendar c = Calendar.getInstance();
+		String day = c.get(Calendar.DAY_OF_YEAR) + "";
+		SharedPreferences spref = getSharedPreferences(SPREF, 0);
+		int prevCount = spref.getInt(day, 0);
+		Editor e = spref.edit();
+		e.putInt(day, ++prevCount);
+		e.commit();
+		
+		
 	}
 
 }
