@@ -68,6 +68,11 @@ public class SoapGUI extends Activity implements OnClickListener{
 		stopService(stopService); 
 	}
 	
+	public void openSettingsActivity(){
+		Intent settingsActivity = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.SoapSettings.class);
+		startActivity(settingsActivity);
+	}
+	
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
 		public void onReceive(Context context, Intent intent) {

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp"
+    android:background="@color/soap_default_background" >
+    
+    <Button
+        android:id="@+id/soap_settings_back_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/soap_back_button_selector"
+        />
+    
+    <Button
+        android:id="@+id/soap_settings_help_button"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/soap_help_button_selector"
+        />
+    
+    <TextView 
+        android:id="@+id/soap_settings_title"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="@string/soap_settings_title"
+        android:textSize="28sp"
+        android:textColor="@color/pure_white"
+        android:shadowColor="@color/text_shadow"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        />
+    
+    <View
+        android:id="@+id/soap_title_separator"
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dip"
+	    android:background="@color/soap_button_border"
+	    android:layout_below='@id/soap_settings_help_button'
+	    android:layout_marginTop="10dp"
+	    android:layout_marginBottom="10dp"
+		/>
+    
+    <CheckBox
+        android:id="@+id/soap_auto_monitor_checkbox"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_title_separator"
+       	android:layout_marginRight="5dp"
+       	android:onClick="onAutoMonitorChecked"
+        />
+    
+    <TextView 
+        android:id="@+id/soap_auto_monitor_text_top"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_title_separator"
+       	android:layout_toRightOf="@id/soap_auto_monitor_checkbox"
+       	android:textSize="18sp"
+       	android:text="@string/soap_auto_monitor_checkbox_text_top"
+       	/>
+    
+    <TextView
+        android:id="@+id/soap_auto_monitor_text_bottom"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_monitor_text_top"
+       	android:layout_toRightOf="@id/soap_auto_monitor_checkbox"
+       	android:layout_marginBottom="5dp"
+       	android:textSize="13sp"
+       	android:text="@string/soap_auto_monitor_checkbox_text_bottom"
+       	
+       	/>
+    
+    <Spinner
+        android:id="@+id/soap_from_day_spinner"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_monitor_text_bottom"
+        />
+    <TextView 
+        android:id="@+id/soap_to_day_text"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_monitor_text_bottom"
+       	android:layout_toRightOf="@id/soap_from_day_spinner"
+       	android:layout_marginTop="10dp"
+       	android:layout_marginLeft="5dp"
+       	android:layout_marginRight="5dp"
+       	android:textSize="17sp"
+       	android:text="to"
+        />
+    <Spinner
+        android:id="@+id/soap_to_day_spinner"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_monitor_text_bottom"
+       	android:layout_toRightOf="@id/soap_to_day_text"
+       	android:layout_marginBottom="5dp"
+        />
+    
+    <Button
+        android:id="@+id/soap_from_time_picker_button"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_to_day_spinner"
+       	android:layout_alignRight="@id/soap_from_day_spinner"
+        />
+    
+    <TextView 
+        android:id="@+id/soap_from_time_text"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_to_day_spinner"
+       	android:layout_toLeftOf="@id/soap_from_time_picker_button"
+       	android:layout_marginTop="10dp"
+       	android:layout_marginRight="5dp"
+       	android:layout_marginLeft="15dp"
+       	android:textSize="17sp"
+       	android:text="from"
+        />
+    <TextView 
+        android:id="@+id/soap_to_time_text"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_to_day_spinner"
+       	android:layout_marginTop="10dp"
+       	android:layout_marginLeft="5dp"
+       	android:layout_marginRight="5dp"
+       	android:textSize="17sp"
+       	android:text="to"
+       	android:layout_toRightOf="@id/soap_from_time_picker_button"
+        />
+    
+    <Button
+        android:id="@+id/soap_to_time_picker_button"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_to_day_spinner"
+       	android:layout_toRightOf="@id/soap_to_time_text"
+        />
+    
+    
+    <View
+        android:id="@+id/soap_auto_times_separator"
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dip"
+	    android:background="@color/soap_button_border"
+	    android:layout_below='@id/soap_to_time_picker_button'
+	    android:layout_marginTop="10dp"
+	    android:layout_marginBottom="10dp"
+		/>
+    
+    
+    
+
+</RelativeLayout>

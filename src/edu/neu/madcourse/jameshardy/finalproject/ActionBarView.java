@@ -15,7 +15,9 @@ import android.view.View;
 
 public class ActionBarView extends View{
 	private static final int ACTION_BUTTON_COUNT = 3;
+	private static final int SETTINGS_BUTTON = 0;
 	private static final int SERVICE_TOGGLE_BUTTON = 1;
+	private static final int EXPORT_BUTTON = 2;
 	boolean serviceOn = false;
 	
 	int viewHeight;
@@ -127,17 +129,13 @@ public class ActionBarView extends View{
     		}
         	return false; 
         case MotionEvent.ACTION_DOWN:
-        	Log.d("A", "down");
         	buttonStates[buttonNumber] = focusedState;
         	invalidate();
         	moveEventButtonId = buttonNumber;
         	break;
         case MotionEvent.ACTION_UP:
-        	Log.d("A", "up");
         	buttonStates[buttonNumber] = pressedState;
-        	if (buttonNumber == SERVICE_TOGGLE_BUTTON){
-        		switchServiceButton();
-        	}
+        	appropriateButtonAction(buttonNumber);
         	invalidate();
         	createTimerToRemoveAnimationOnButtons(buttonNumber);
         	return false;
@@ -245,6 +243,18 @@ public class ActionBarView extends View{
 	    
     }
     
+    private void appropriateButtonAction(int buttonNumber){
+    	if (buttonNumber == SETTINGS_BUTTON){
+    		soapGUI.openSettingsActivity();
+    	}
+    	else if (buttonNumber == SERVICE_TOGGLE_BUTTON){
+    		switchServiceButton();
+    	}
+    	else if (buttonNumber == EXPORT_BUTTON){
+    		//TODO
+    	}
+    }
+    
     private void switchServiceButton(){
     	if (serviceOn){
     		topText[SERVICE_TOGGLE_BUTTON] = "START";
@@ -258,6 +268,7 @@ public class ActionBarView extends View{
     	}
     	
     }
+    
     
 	
 }

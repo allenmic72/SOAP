@@ -134,7 +134,6 @@
         <activity
             android:name=".finalproject.SoapGUI"
             android:label="@string/soap_main_label"
-            android:theme="@android:style/Theme.Black"
             android:screenOrientation="portrait" >
               <intent-filter >
                 <action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />
@@ -145,14 +144,17 @@
         <activity
             android:name=".finalproject.AccelerometerActivity"
             android:label="@string/soap_main_label"
-            android:theme="@android:style/Theme.Black"
             android:screenOrientation="portrait" />
         <activity
             android:name=".finalproject.SoapAcknowledgements"
             android:label="@string/soap_title_acknowledgements"
             android:theme="@android:style/Theme.Dialog" >
         </activity>
-
+        <activity
+            android:name=".finalproject.SoapSettings"
+            android:label="@string/soap_settings_label"
+            android:screenOrientation="portrait">
+        </activity>
         <service android:name="edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService" />
         <service android:name="edu.neu.madcourse.jameshardy.finalproject.TapListenerService" />
 </application>

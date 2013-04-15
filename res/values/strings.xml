@@ -115,5 +115,11 @@ eliminate gravity from the accelerometer readings.
  tutorial. </string>
  	<string name="soap_settings_button">SOAP SETTINGS</string>
  	<string name="soap_export_data_button">EXPORT DATA</string>
+ 	<string name="soap_settings_title">SETTINGS</string>
+ 	<string name="soap_settings_label">Soap Settings</string>
+ 	<string name="soap_auto_monitor_checkbox_text_top">Auto Monitor</string>
+ 	<string name="soap_auto_monitor_checkbox_text_bottom">
+ 	    Taps will be monitored during set period
+ 	</string>
 
 </resources>
