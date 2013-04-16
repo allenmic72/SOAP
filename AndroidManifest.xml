@@ -134,17 +134,16 @@
         <activity
             android:name=".finalproject.SoapGUI"
             android:label="@string/soap_main_label"
-            android:screenOrientation="portrait" >
-              <intent-filter >
-                <action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />
-                <category android:name="android.intent.category.DEFAULT" />
+            android:icon="@drawable/soap_launcher"
+            android:screenOrientation="portrait" 
+            android:taskAffinity="edu.neu.madcourse.jameshardy.finalproject.SoapGUI">
+              <intent-filter android:label="@string/soap_app_name">
+                <!--<action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />-->
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
-        <activity
-            android:name=".finalproject.AccelerometerActivity"
-            android:label="@string/soap_main_label"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".finalproject.SoapAcknowledgements"
             android:label="@string/soap_title_acknowledgements"
@@ -155,7 +154,6 @@
             android:label="@string/soap_settings_label"
             android:screenOrientation="portrait">
         </activity>
-        <service android:name="edu.neu.madcourse.jameshardy.finalproject.AccelerometerListenerService" />
         <service android:name="edu.neu.madcourse.jameshardy.finalproject.TapListenerService" />
 </application>
 

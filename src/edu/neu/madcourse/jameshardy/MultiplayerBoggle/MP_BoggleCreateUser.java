@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
+
 public class MP_BoggleCreateUser extends Activity implements OnClickListener {
 	
 	private static final String TAG = "MP Boggle";

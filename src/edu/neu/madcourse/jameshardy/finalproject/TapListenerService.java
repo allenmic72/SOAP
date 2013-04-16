@@ -1,6 +1,8 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import edu.neu.madcourse.jameshardy.R;
+import edu.neu.madcourse.jameshardy.MultiplayerBoggle.MP_BoggleUser;
 import edu.neu.mobileclass.apis.KeyValueAPI;
 
 import android.app.Service;
@@ -32,9 +35,11 @@ public class TapListenerService extends Service implements
 		SensorEventListener {
 	private static final String TAG = "TapListener";
 
-	//public static final String BROADCAST_ACTION = "edu.neu.madcourse.jameshardy.finalproject.send_count";
-	//public static final String HANDWASH_COUNT = "edu.neu.madcourse.jameshardy.finalproject.wash_count";
 	public static final String SPREF = "soapPreferences";
+	public static final String NUMDAYS_PREF = "number_days";
+	public static final String DAY_PREF = "current_day";
+	public static final String DAYCOUNT_PREF = "dailycount";
+	public static final String TOTALCOUNT_PREF = "totalcount";
 
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
@@ -256,7 +261,7 @@ public class TapListenerService extends Service implements
 			}
 		}
 
-		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 1.4 
+		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 1.5 
 				&& Math.abs(accelFilter[1]) < .1 && Math.abs(accelFilter[0]) < .1) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
@@ -309,6 +314,21 @@ public class TapListenerService extends Service implements
 	 * the key value is the current day in the current year (1 - 365)
 	 */
 	private void updateSharedPref(){
+		/*
+		 * Shared Preferences
+		 * <numdays,#>
+		 * <currentday,#>
+		 * <daycount, #>
+		 * <totalcount, #>
+		 */
+		/*
+		 * public static final String SPREF = "soapPreferences";
+	public static final String NUMDAYS_PREF = "number_days";
+	public static final String DAY_PREF = "current_day";
+	public static final String DAYCOUNT_PREF = "dailycount";
+	public static final String TOTALCOUNT_PREF = "totalcount";
+		 */
+		/*
 		Calendar c = Calendar.getInstance();
 		String day = c.get(Calendar.DAY_OF_YEAR) + "";
 		SharedPreferences spref = getSharedPreferences(SPREF, 0);
@@ -316,6 +336,52 @@ public class TapListenerService extends Service implements
 		Editor e = spref.edit();
 		e.putInt(day, ++prevCount);
 		e.commit();
+		*/
+		Calendar c = Calendar.getInstance();
+		int currDay = c.get(Calendar.DAY_OF_YEAR);
+		String currDay_str = currDay + "";
+		Timestamp t = new Timestamp(c.getTime().getTime());
+		String timestamp = t.toString();
+		
+		SharedPreferences sprefs = getSharedPreferences(SPREF, 0);
+		Editor e = sprefs.edit();
+		
+		Gson g = new Gson();
+		Type listTimestamps = new TypeToken<List<String>>(){}.getType();
+		
+		int storedDay = sprefs.getInt(DAY_PREF, 0);
+		// new day of counting
+		if (currDay > storedDay) {
+			//reset the daily count to one
+			e.putInt(DAYCOUNT_PREF, 1);
+			int totalCnt = sprefs.getInt(TOTALCOUNT_PREF, 0);
+			e.putInt(TOTALCOUNT_PREF, ++totalCnt);
+			e.putInt(DAY_PREF, currDay);
+			int numDays = sprefs.getInt(NUMDAYS_PREF, 0);
+			e.putInt(NUMDAYS_PREF, ++numDays);
+			//
+			String timestamp_str = sprefs.getString(currDay_str, "");
+			List<String> timestampList = new ArrayList<String>();
+			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			timestampList.add(timestamp);
+			timestamp_str = g.toJson(timestampList, listTimestamps);
+			e.putString(currDay_str, timestamp_str);
+		}
+		// same day
+		else {
+			int dailyCnt = sprefs.getInt(DAYCOUNT_PREF, 0);
+			e.putInt(DAYCOUNT_PREF, ++dailyCnt);
+			int totalCnt = sprefs.getInt(TOTALCOUNT_PREF, 0);
+			e.putInt(TOTALCOUNT_PREF, ++totalCnt);
+			e.putInt(DAY_PREF, currDay);
+			//
+			String timestamp_str = sprefs.getString(currDay_str, "");
+			List<String> timestampList = new ArrayList<String>();
+			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			timestampList.add(timestamp);
+			timestamp_str = g.toJson(timestampList, listTimestamps);
+			e.putString(currDay_str, timestamp_str);
+		}
 		
 		
 	}
