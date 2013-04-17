@@ -1,6 +1,8 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -30,6 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import au.com.bytecode.opencsv.CSVWriter;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettingsHolder;
 
@@ -321,12 +325,57 @@ public class SoapGUI extends Activity implements OnClickListener{
 		alert.show();
 	}
 	
-	private void createCSVFile() {
-		//TODO
+	private String createCSVFile() {
+		Calendar c = Calendar.getInstance();
+		int currDay = c.get(Calendar.DAY_OF_YEAR);
+		String currDay_str = currDay + "";
+		Gson g = new Gson();
+		Type listTimestamps = new TypeToken<List<String>>(){}.getType();
+		String fileName = "";
+		String fullPath = "";
+		SharedPreferences sprefs = getSharedPreferences(SPREF, 0);
+		
+		String timestamp_str = sprefs.getString(currDay_str, "");
+		//Log.d(TAG, "NULL CHECK " + timestamp_str);
+		List<String> timestampList = new ArrayList<String>(){};
+		//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+		if (!timestamp_str.isEmpty()) {
+			timestampList = g.fromJson(timestamp_str, listTimestamps);
+		}
+		
+		fileName = "SOAP_" + currDay + ".csv";
+		fullPath = "/sdcard/"+fileName;
+		
+		CSVWriter writer = null;
+		try 
+		{
+		    //writer = new CSVWriter(new FileWriter("/sdcard/myfile.csv"), ',');
+			writer = new CSVWriter(new FileWriter(fullPath), ',');
+			if (timestampList.isEmpty()) {
+				String[] entries = "today#no data".split("#");
+				writer.writeNext(entries);
+			}
+			else {
+				for (int i = 0; i < timestampList.size(); i++) {
+					int count = i+1;
+					String entry = count+"#"+timestampList.get(i);
+					String[] entries = entry.split("#");
+					writer.writeNext(entries);
+				}
+			}
+			 
+		    writer.close();
+		} 
+		catch (IOException e)
+		{
+		    //error
+		}
+		
+		return fileName;
 	}
 	private void sendEmail(String addr) {
 		//create attachment
-		createCSVFile();
+		String fileName = createCSVFile();
 		//send email
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
@@ -334,17 +383,17 @@ public class SoapGUI extends Activity implements OnClickListener{
 		intent.putExtra(Intent.EXTRA_EMAIL, addr);
 		intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
 		intent.putExtra(Intent.EXTRA_TEXT, "body text");
-		/*
+		
 		File root = Environment.getExternalStorageDirectory();
-		File file = new File(root, xmlFilename);
+		File file = new File(root, fileName);
 		if (!file.exists() || !file.canRead()) {
 		    Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
-		    finish();
-		    return;
+		    //finish();
+		    //return;
 		}
 		Uri uri = Uri.parse("file://" + file);
 		intent.putExtra(Intent.EXTRA_STREAM, uri);
-		*/
+		
 		startActivity(Intent.createChooser(intent, "Send email..."));
 	}
 }
