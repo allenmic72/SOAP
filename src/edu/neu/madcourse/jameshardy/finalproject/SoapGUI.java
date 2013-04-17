@@ -14,7 +14,10 @@ import com.google.gson.reflect.TypeToken;
 
 import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import au.com.bytecode.opencsv.CSVWriter;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
+import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettingsHolder;
 
 public class SoapGUI extends Activity implements OnClickListener{
@@ -55,6 +59,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 	TextView lastWashTime;
 	TextView countToday;
 	TextView averageCount;
+	ActionBarView actionBar;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -154,6 +159,8 @@ public class SoapGUI extends Activity implements OnClickListener{
         filter.addAction(BROADCAST_ACTION);
         registerReceiver(receiver, filter);
         int washCountToday = getCurrentWashCountFromSpref();
+        
+        setServiceAlarm();
         int totalWashCount = getTotalWashCountFromSpref();
         int numDaysRecording = getNumDaysFromSpref();
         double avg = 0;
@@ -233,7 +240,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			//Log.d(TAG, "NULL CHECK " + timestamp_str);
 			List<String> timestampList = new ArrayList<String>(){};
 			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
-			if (!timestamp_str.isEmpty()) {
+			if (!timestamp_str.equals("")) {
 				timestampList = g.fromJson(timestamp_str, listTimestamps);
 			}
 			timestampList.add(timestamp);
@@ -253,7 +260,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			//Log.d(TAG, "NULL CHECK " + timestamp_str);
 			List<String> timestampList = new ArrayList<String>(){};
 			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
-			if (!timestamp_str.isEmpty()) {
+			if (!timestamp_str.equals("")) {
 				timestampList = g.fromJson(timestamp_str, listTimestamps);
 			}
 			timestampList.add(timestamp);
@@ -277,7 +284,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			settings = gson.fromJson(previousSettings, SoapSettingsHolder.class);
 		}
 		
-		if (settings.defaultEmail.isEmpty()) {
+		if (settings.defaultEmail.equals("")) {
 			promptForEmailAddressAndSend();
 		}
 		else {
@@ -304,7 +311,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			
 			String email_addr = emailField.getText().toString();
 		
-			if (email_addr.isEmpty() || email_addr.length() < 7) {
+			if (email_addr.equals("") || email_addr.length() < 7) {
 				Toast.makeText(getBaseContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
 			}
 			else {
@@ -373,6 +380,10 @@ public class SoapGUI extends Activity implements OnClickListener{
 		
 		return fileName;
 	}
+	private void setServiceAlarm(){
+		
+	}
+	
 	private void sendEmail(String addr) {
 		//create attachment
 		String fileName = createCSVFile();

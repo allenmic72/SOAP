@@ -1,6 +1,8 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
 import edu.neu.madcourse.jameshardy.R;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -18,7 +20,6 @@ public class ActionBarView extends View{
 	private static final int SETTINGS_BUTTON = 0;
 	private static final int SERVICE_TOGGLE_BUTTON = 1;
 	private static final int EXPORT_BUTTON = 2;
-	boolean serviceOn = false;
 	
 	int viewHeight;
 	int viewWidth;
@@ -41,7 +42,7 @@ public class ActionBarView extends View{
 		super(context);
 		this.soapGUI = (SoapGUI) context;
 		
-		//TODO check if service is on or off
+		setProperServiceVariables();
 	}
 	
 	@Override
@@ -58,6 +59,7 @@ public class ActionBarView extends View{
 	    super.onSizeChanged(w, h, oldw, oldh);
 	    initializeCanvasObjects(soapGUI);
 	    letterColor.setTextSize(buttonWidth * .12f);
+	    setProperServiceVariables();
     }    
     
     @Override
@@ -231,15 +233,13 @@ public class ActionBarView extends View{
 	    	
 	    }
 	    
-	    topText[0] = "VIEW";
-	    topText[1] = "START";
-	    topText[2] = "EXPORT";
+	    topText[SETTINGS_BUTTON] = "VIEW";
+	    setProperServiceVariables();
+	    topText[EXPORT_BUTTON] = "EXPORT";
 	    
-	    bottomText[0] = "SETTINGS";
-	    bottomText[1] = "MONITORING";
-	    bottomText[2] = "DATA";
-	    
-	    
+	    bottomText[SETTINGS_BUTTON] = "SETTINGS";
+	    bottomText[SERVICE_TOGGLE_BUTTON] = "MONITORING";
+	    bottomText[EXPORT_BUTTON] = "DATA";
 	    
     }
     
@@ -256,19 +256,44 @@ public class ActionBarView extends View{
     }
     
     private void switchServiceButton(){
-    	if (serviceOn){
+    	if (serviceIsRunning()){
     		topText[SERVICE_TOGGLE_BUTTON] = "START";
-    		serviceOn = false;
     		soapGUI.stopService();
     	}
     	else{
     		topText[SERVICE_TOGGLE_BUTTON] = "STOP";
-    		serviceOn = true;
     		soapGUI.startService();
     	}
     	
     }
     
+    /**
+	 * checks the list of all running services to see if the service is currently running
+	 * More reliable than using spref
+	 */
+	private boolean serviceIsRunning() {
+		if (soapGUI != null){
+		    ActivityManager manager = (ActivityManager) soapGUI.getSystemService(Context.ACTIVITY_SERVICE);
+		    for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+		        if (TapListenerService.class.getName().equals(service.service.getClassName())) {
+		        	Log.d("", "Service is running");
+		            return true;
+		        }
+		    }
+		}
+		Log.d("", "service not running");
+	    return false;
+	}
+	
+	private void setProperServiceVariables(){
+		if (serviceIsRunning()){
+			topText[SERVICE_TOGGLE_BUTTON] = "STOP";
+		}
+		else{
+			topText[SERVICE_TOGGLE_BUTTON] = "START";
+		}
+		
+	}
     
 	
 }
