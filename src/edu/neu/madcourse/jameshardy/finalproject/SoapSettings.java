@@ -48,6 +48,9 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	
 	SoapSettingsHolder sprefSettingsData;
 	
+	private static final int toSpinnerId = 10;
+	private static final int fromSpinnerId = 20;
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,16 +91,19 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		// Specify the layout to use when the list of choices appears
 		
 		*/
-		ArrayAdapter<String> adapter = createCustomAdapater();
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> toAdapter = createCustomAdapater(toSpinnerId);
+		ArrayAdapter<String> fromAdapter = createCustomAdapater(fromSpinnerId);
+		
+		toAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		fromAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				
 		fromDaySpinner = (Spinner) findViewById(R.id.soap_from_day_spinner);
 		fromDaySpinner.setOnItemSelectedListener(this);
-		fromDaySpinner.setAdapter(adapter);
+		fromDaySpinner.setAdapter(fromAdapter);
 		
 		toDaySpinner = (Spinner) findViewById(R.id.soap_to_day_spinner);
 		toDaySpinner.setOnItemSelectedListener(this);
-		toDaySpinner.setAdapter(adapter);
+		toDaySpinner.setAdapter(toAdapter);
 		
 		
 		fromTimeButton = (Button) findViewById(R.id.soap_from_time_picker_button);
@@ -138,13 +144,13 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	 */
 	public void onItemSelected(AdapterView<?> parent, View v, int pos,
 			long id) {
-		Log.d(TAG, "spinner item id: " + id);
-		Log.d(TAG, "parent id: " + parent.getId() + " " + toDaySpinner.getId());
 		int dayId = (int) id;
-		if (v == toDaySpinner){
+		int adapterHashCode = parent.getAdapter().hashCode();
+		Log.d(TAG, "hashcode: " + adapterHashCode);
+		if (adapterHashCode == toSpinnerId){
 			sprefSettingsData.endDay = dayId;
 		}
-		else if (v == fromDaySpinner){
+		else if (adapterHashCode == fromSpinnerId){
 			Log.d(TAG, "fromdayspinner item id: " + id);
 			sprefSettingsData.startDay = dayId;
 		}
@@ -189,13 +195,12 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	/**
 	 * creates a custom adapter for the spinners, giving them special font
 	 */
-	private ArrayAdapter<String> createCustomAdapater(){
+	private ArrayAdapter<String> createCustomAdapater(final int id){
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, 
 				R.layout.spinner_textiew, items) {
-
+			
 		     public View getView(int position, View convertView, ViewGroup parent) {
 		             TextView v = (TextView) super.getView(position, convertView, parent);
-		
 		             v.setTypeface(helveticaLight);
 		             v.setText(items[position]);
 		             ((TextView) v).setTextColor(Color.BLACK);
@@ -211,6 +216,12 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		
 		             return v;
 		     }
+		     
+		     @Override
+		     public int hashCode(){
+		    	 return id;
+		     }
+		     
 		};
 		return adapter;
 	}

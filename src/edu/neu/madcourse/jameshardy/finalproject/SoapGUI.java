@@ -25,6 +25,9 @@ public class SoapGUI extends Activity implements OnClickListener{
 	
 	private static final String TAG = "SOAP GUI";
 	
+	TextView lastWashTime;
+	TextView countToday;
+	TextView averageCount;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -33,6 +36,24 @@ public class SoapGUI extends Activity implements OnClickListener{
 		Typeface helveticaLight = Typeface.createFromAsset(getAssets(), "helvetica_neue_light.ttf");
 		TextView soapTitle = (TextView) findViewById(R.id.soap_title);
 		soapTitle.setTypeface(helveticaLight);
+		
+		lastWashTime = (TextView) findViewById(R.id.soap_last_wash_time);
+		lastWashTime.setTypeface(helveticaLight);
+		lastWashTime.setText("Last wash 22 minutes ago");
+		
+		TextView countTodayText = (TextView) findViewById(R.id.soap_washcount_text);
+		countTodayText.setTypeface(helveticaLight);
+		countTodayText.setText("WASHES\nTODAY\n");
+		
+		countToday = (TextView) findViewById(R.id.soap_washcount_number);
+		countToday.setTypeface(helveticaLight);
+		
+		TextView averageCountText = (TextView) findViewById(R.id.soap_average_washcount_text);
+		averageCountText.setTypeface(helveticaLight);
+		averageCountText.setText("DAILY\nAVERAGE\n");
+		
+		averageCount = (TextView) findViewById(R.id.soap_average_washcount_number);
+		averageCount.setTypeface(helveticaLight);
 		
 		View backButton = findViewById(R.id.soap_back_button);
 		backButton.setOnClickListener(this);
