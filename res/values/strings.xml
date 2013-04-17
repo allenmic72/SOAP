@@ -98,7 +98,7 @@ word and another point for each letter following.
 Can not use the same word twice. </string>
 
     <!-- SOAP RESOURCES -->
-    <string name="soap_app_name">SOAP</string>
+    <string name="soap_app_name">MAD_SOAP</string>
     <string name="soap_main_button">Trickiest Part</string>
     <string name="soap_start_service">START MONITORING</string>
     <string name="soap_main_label">S  O  A  P</string>
