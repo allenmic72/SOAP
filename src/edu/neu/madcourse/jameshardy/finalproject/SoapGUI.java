@@ -12,7 +12,10 @@ import com.google.gson.reflect.TypeToken;
 
 import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
+import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
 
 public class SoapGUI extends Activity implements OnClickListener{
 
@@ -48,6 +52,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 	TextView lastWashTime;
 	TextView countToday;
 	TextView averageCount;
+	ActionBarView actionBar;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -148,6 +153,8 @@ public class SoapGUI extends Activity implements OnClickListener{
         registerReceiver(receiver, filter);
         int washCountToday = getCurrentWashCountFromSpref();
         updateTextField(washCountToday);
+        
+        setServiceAlarm();
         super.onResume();
     }
 
@@ -256,7 +263,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			
 			String email_addr = emailField.getText().toString();
 		
-			if (email_addr.isEmpty() || email_addr.length() < 7) {
+			if (email_addr == "" || email_addr.length() < 7) {
 				Toast.makeText(getBaseContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
 			}
 			else {
@@ -297,4 +304,9 @@ public class SoapGUI extends Activity implements OnClickListener{
 	private void createCSVFile() {
 		//TODO
 	}
+	
+	private void setServiceAlarm(){
+		
+	}
+	
 }
