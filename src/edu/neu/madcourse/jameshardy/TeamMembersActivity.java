@@ -20,6 +20,9 @@ public class TeamMembersActivity extends Activity {
         TextView textOut;
         textOut = (TextView)findViewById(R.id.devIdText);
         textOut.setText("Device ID: " + devId);
+        
+        ImageView image = (ImageView)findViewById(R.id.face_image);
+        image.setImageResource(R.drawable.face_shot);
     }
 
 }

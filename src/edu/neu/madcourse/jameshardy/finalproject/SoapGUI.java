@@ -147,7 +147,10 @@ public class SoapGUI extends Activity implements OnClickListener{
         filter.addAction(BROADCAST_ACTION);
         registerReceiver(receiver, filter);
         int washCountToday = getCurrentWashCountFromSpref();
-        updateTextField(washCountToday);
+        int totalWashCount = getTotalWashCountFromSpref();
+        int numDaysRecording = getNumDaysFromSpref();
+        double avg = totalWashCount/numDaysRecording;
+        updateTextField(washCountToday, avg);
         super.onResume();
     }
 
@@ -157,19 +160,31 @@ public class SoapGUI extends Activity implements OnClickListener{
         super.onPause();
     }
 	
-	private void updateTextField(int count) {
+	private void updateTextField(int count, double avg) {
 		//post handwash count
-		if (count != 0) {
+		if (count != 0 && avg != 0) {
 			countToday.setText("" + count);
+			averageCount.setText("" + avg);
 		} else {
 			Log.d(TAG, "count is null");
 		}
 	}
 	
+	private int getTotalWashCountFromSpref() {
+		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
+		return spref.getInt(TOTALCOUNT_PREF, 0);
+	}
+	
+	private int getNumDaysFromSpref() {
+		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
+		return spref.getInt(NUMDAYS_PREF, 0);
+	}
+	
 	private int getCurrentWashCountFromSpref(){
 		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
-		String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
-		return spref.getInt(day, 0);
+		//String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
+		//return spref.getInt(day, 0);
+		return spref.getInt(DAYCOUNT_PREF, 0);
 	}
 	public void updateSharedPref(){
 		/*
@@ -204,14 +219,16 @@ public class SoapGUI extends Activity implements OnClickListener{
 			int numDays = sprefs.getInt(NUMDAYS_PREF, 0);
 			e.putInt(NUMDAYS_PREF, ++numDays);
 			//
-			/*
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.isEmpty()) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
 		}
 		
 		// same day
@@ -222,14 +239,16 @@ public class SoapGUI extends Activity implements OnClickListener{
 			e.putInt(TOTALCOUNT_PREF, ++totalCnt);
 			e.putInt(DAY_PREF, currDay);
 			//
-			/*
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.isEmpty()) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
 		}
 		
 		e.commit();

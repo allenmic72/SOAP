@@ -352,14 +352,18 @@ public class TapListenerService extends Service implements
 			int numDays = sprefs.getInt(NUMDAYS_PREF, 0);
 			e.putInt(NUMDAYS_PREF, ++numDays);
 			//
-			/*
+			
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.isEmpty()) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
+			
 		}
 		
 		// same day
@@ -371,15 +375,16 @@ public class TapListenerService extends Service implements
 			e.putInt(DAY_PREF, currDay);
 			//
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			/*
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
 			if (!timestamp_str.isEmpty()) {
 				timestampList = g.fromJson(timestamp_str, listTimestamps);
 			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
+			
 		}
 		
 		e.commit();
