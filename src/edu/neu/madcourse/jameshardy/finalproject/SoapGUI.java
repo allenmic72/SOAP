@@ -31,12 +31,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
+import edu.neu.madcourse.jameshardy.finalproject.SoapSettingsHolder;
 
 public class SoapGUI extends Activity implements OnClickListener{
 
 	public static final String BROADCAST_ACTION = "edu.neu.madcourse.jameshardy.finalproject.send_count";
 	public static final String HANDWASH_COUNT = "edu.neu.madcourse.jameshardy.finalproject.wash_count";
 	
+	private static final String settingsSharedPrefName = "SoapSettings";
+	private static final String settingsPrefDataKey = "settings";
 	public static final String SPREF = "soapPreferences";
 	public static final String NUMDAYS_PREF = "number_days";
 	public static final String DAY_PREF = "current_day";
@@ -149,7 +152,10 @@ public class SoapGUI extends Activity implements OnClickListener{
         int washCountToday = getCurrentWashCountFromSpref();
         int totalWashCount = getTotalWashCountFromSpref();
         int numDaysRecording = getNumDaysFromSpref();
-        double avg = totalWashCount/numDaysRecording;
+        double avg = 0;
+        if (numDaysRecording != 0) {
+        	avg = totalWashCount/numDaysRecording;
+        }
         updateTextField(washCountToday, avg);
         super.onResume();
     }
@@ -258,6 +264,25 @@ public class SoapGUI extends Activity implements OnClickListener{
 	
 	public void exportData() {
 		//TODO
+		SharedPreferences sprefs = getSharedPreferences(settingsSharedPrefName, 0);
+		String previousSettings = sprefs.getString(settingsPrefDataKey, "");
+		SoapSettingsHolder settings = new SoapSettingsHolder();
+		if (previousSettings != null && previousSettings != ""){
+			//previous settings exist, so load them and set them on view
+			Gson gson = new Gson();
+			settings = gson.fromJson(previousSettings, SoapSettingsHolder.class);
+		}
+		
+		if (settings.defaultEmail.isEmpty()) {
+			promptForEmailAddressAndSend();
+		}
+		else {
+			sendEmail(settings.defaultEmail);
+		}
+		
+	}
+	
+	private void promptForEmailAddressAndSend() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		alert.setTitle("Export Email");
@@ -279,26 +304,8 @@ public class SoapGUI extends Activity implements OnClickListener{
 				Toast.makeText(getBaseContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
 			}
 			else {
-				//create attachment
-				createCSVFile();
 				//send email
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"email@example.com"});
-				intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
-				intent.putExtra(Intent.EXTRA_TEXT, "body text");
-				/*
-				File root = Environment.getExternalStorageDirectory();
-				File file = new File(root, xmlFilename);
-				if (!file.exists() || !file.canRead()) {
-				    Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
-				    finish();
-				    return;
-				}
-				Uri uri = Uri.parse("file://" + file);
-				intent.putExtra(Intent.EXTRA_STREAM, uri);
-				startActivity(Intent.createChooser(intent, "Send email..."));
-				*/
+				sendEmail(email_addr);	
 			}
 			
 		  }
@@ -313,7 +320,31 @@ public class SoapGUI extends Activity implements OnClickListener{
 
 		alert.show();
 	}
+	
 	private void createCSVFile() {
 		//TODO
+	}
+	private void sendEmail(String addr) {
+		//create attachment
+		createCSVFile();
+		//send email
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		//intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"hardy.ja@husky.neu.edu"});
+		intent.putExtra(Intent.EXTRA_EMAIL, addr);
+		intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
+		intent.putExtra(Intent.EXTRA_TEXT, "body text");
+		/*
+		File root = Environment.getExternalStorageDirectory();
+		File file = new File(root, xmlFilename);
+		if (!file.exists() || !file.canRead()) {
+		    Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
+		    finish();
+		    return;
+		}
+		Uri uri = Uri.parse("file://" + file);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		*/
+		startActivity(Intent.createChooser(intent, "Send email..."));
 	}
 }
