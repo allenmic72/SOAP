@@ -138,7 +138,7 @@
             android:screenOrientation="portrait" 
             android:taskAffinity="edu.neu.madcourse.jameshardy.finalproject.SoapGUI">
               <intent-filter android:label="@string/soap_app_name">
-                <!--<action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />-->
+                <action android:name="edu.neu.madcourse.jameshardy.finalproject.STARTSOAP" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

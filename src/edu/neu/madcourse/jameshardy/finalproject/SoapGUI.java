@@ -35,12 +35,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
+import edu.neu.madcourse.jameshardy.finalproject.SoapSettingsHolder;
 
 public class SoapGUI extends Activity implements OnClickListener{
 
 	public static final String BROADCAST_ACTION = "edu.neu.madcourse.jameshardy.finalproject.send_count";
 	public static final String HANDWASH_COUNT = "edu.neu.madcourse.jameshardy.finalproject.wash_count";
 	
+	private static final String settingsSharedPrefName = "SoapSettings";
+	private static final String settingsPrefDataKey = "settings";
 	public static final String SPREF = "soapPreferences";
 	public static final String NUMDAYS_PREF = "number_days";
 	public static final String DAY_PREF = "current_day";
@@ -152,9 +155,15 @@ public class SoapGUI extends Activity implements OnClickListener{
         filter.addAction(BROADCAST_ACTION);
         registerReceiver(receiver, filter);
         int washCountToday = getCurrentWashCountFromSpref();
-        updateTextField(washCountToday);
         
         setServiceAlarm();
+        int totalWashCount = getTotalWashCountFromSpref();
+        int numDaysRecording = getNumDaysFromSpref();
+        double avg = 0;
+        if (numDaysRecording != 0) {
+        	avg = totalWashCount/numDaysRecording;
+        }
+        updateTextField(washCountToday, avg);
         super.onResume();
     }
 
@@ -164,19 +173,31 @@ public class SoapGUI extends Activity implements OnClickListener{
         super.onPause();
     }
 	
-	private void updateTextField(int count) {
+	private void updateTextField(int count, double avg) {
 		//post handwash count
-		if (count != 0) {
+		if (count != 0 && avg != 0) {
 			countToday.setText("" + count);
+			averageCount.setText("" + avg);
 		} else {
 			Log.d(TAG, "count is null");
 		}
 	}
 	
+	private int getTotalWashCountFromSpref() {
+		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
+		return spref.getInt(TOTALCOUNT_PREF, 0);
+	}
+	
+	private int getNumDaysFromSpref() {
+		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
+		return spref.getInt(NUMDAYS_PREF, 0);
+	}
+	
 	private int getCurrentWashCountFromSpref(){
 		SharedPreferences spref = getSharedPreferences(TapListenerService.SPREF, 0);
-		String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
-		return spref.getInt(day, 0);
+		//String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
+		//return spref.getInt(day, 0);
+		return spref.getInt(DAYCOUNT_PREF, 0);
 	}
 	public void updateSharedPref(){
 		/*
@@ -211,14 +232,16 @@ public class SoapGUI extends Activity implements OnClickListener{
 			int numDays = sprefs.getInt(NUMDAYS_PREF, 0);
 			e.putInt(NUMDAYS_PREF, ++numDays);
 			//
-			/*
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.equals("")) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
 		}
 		
 		// same day
@@ -229,14 +252,16 @@ public class SoapGUI extends Activity implements OnClickListener{
 			e.putInt(TOTALCOUNT_PREF, ++totalCnt);
 			e.putInt(DAY_PREF, currDay);
 			//
-			/*
 			String timestamp_str = sprefs.getString(currDay_str, "");
-			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			//Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>(){};
+			//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.equals("")) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
-			*/
 		}
 		
 		e.commit();
@@ -246,6 +271,25 @@ public class SoapGUI extends Activity implements OnClickListener{
 	
 	public void exportData() {
 		//TODO
+		SharedPreferences sprefs = getSharedPreferences(settingsSharedPrefName, 0);
+		String previousSettings = sprefs.getString(settingsPrefDataKey, "");
+		SoapSettingsHolder settings = new SoapSettingsHolder();
+		if (previousSettings != null && previousSettings != ""){
+			//previous settings exist, so load them and set them on view
+			Gson gson = new Gson();
+			settings = gson.fromJson(previousSettings, SoapSettingsHolder.class);
+		}
+		
+		if (settings.defaultEmail.equals("")) {
+			promptForEmailAddressAndSend();
+		}
+		else {
+			sendEmail(settings.defaultEmail);
+		}
+		
+	}
+	
+	private void promptForEmailAddressAndSend() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		alert.setTitle("Export Email");
@@ -263,30 +307,12 @@ public class SoapGUI extends Activity implements OnClickListener{
 			
 			String email_addr = emailField.getText().toString();
 		
-			if (email_addr == "" || email_addr.length() < 7) {
+			if (email_addr.equals("") || email_addr.length() < 7) {
 				Toast.makeText(getBaseContext(), "Invalid Email", Toast.LENGTH_SHORT).show();
 			}
 			else {
-				//create attachment
-				createCSVFile();
 				//send email
-				Intent intent = new Intent(Intent.ACTION_SEND);
-				intent.setType("text/plain");
-				intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"email@example.com"});
-				intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
-				intent.putExtra(Intent.EXTRA_TEXT, "body text");
-				/*
-				File root = Environment.getExternalStorageDirectory();
-				File file = new File(root, xmlFilename);
-				if (!file.exists() || !file.canRead()) {
-				    Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
-				    finish();
-				    return;
-				}
-				Uri uri = Uri.parse("file://" + file);
-				intent.putExtra(Intent.EXTRA_STREAM, uri);
-				startActivity(Intent.createChooser(intent, "Send email..."));
-				*/
+				sendEmail(email_addr);	
 			}
 			
 		  }
@@ -301,12 +327,35 @@ public class SoapGUI extends Activity implements OnClickListener{
 
 		alert.show();
 	}
+	
 	private void createCSVFile() {
 		//TODO
 	}
-	
 	private void setServiceAlarm(){
 		
 	}
 	
+	private void sendEmail(String addr) {
+		//create attachment
+		createCSVFile();
+		//send email
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		//intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"hardy.ja@husky.neu.edu"});
+		intent.putExtra(Intent.EXTRA_EMAIL, addr);
+		intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
+		intent.putExtra(Intent.EXTRA_TEXT, "body text");
+		/*
+		File root = Environment.getExternalStorageDirectory();
+		File file = new File(root, xmlFilename);
+		if (!file.exists() || !file.canRead()) {
+		    Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
+		    finish();
+		    return;
+		}
+		Uri uri = Uri.parse("file://" + file);
+		intent.putExtra(Intent.EXTRA_STREAM, uri);
+		*/
+		startActivity(Intent.createChooser(intent, "Send email..."));
+	}
 }
