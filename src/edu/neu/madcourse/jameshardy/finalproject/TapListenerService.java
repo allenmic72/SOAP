@@ -192,6 +192,7 @@ public class TapListenerService extends Service implements
 	 * float z_stack[] = new float[5]; private int stack_count = 0; private int
 	 * tap_count = 0; private int registered_taps = 0;
 	 */
+	//private int count_down = 6;
 	private int count_down = 6;
 	private int tap_count = 0;
 	private long last_tap_time = 0;
@@ -230,6 +231,8 @@ public class TapListenerService extends Service implements
 		accelFilter[0] = (float) (alpha * (accelFilter[0] + accelX - lastAccel[0]));
 		accelFilter[1] = (float) (alpha * (accelFilter[1] + accelY - lastAccel[1]));
 		accelFilter[2] = (float) (alpha * (accelFilter[2] + accelZ - lastAccel[2]));
+		
+		//Log.d(TAG, "accel x: " + accelFilter[0] + " accel y: " + accelFilter[1] + " accel z: " + accelFilter[2]);		
 
 		lastAccel[0] = accelX;
 		lastAccel[1] = accelY;
@@ -255,14 +258,17 @@ public class TapListenerService extends Service implements
 			// not tap
 			else {
 				// reset
+				//count_down = 6;
 				count_down = 6;
 				//POTENTIAL_TAP = false;
 				FALSE_TAP = true;
 			}
 		}
-
-		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 1.5 
-				&& Math.abs(accelFilter[1]) < .1 && Math.abs(accelFilter[0]) < .1) {
+/*
+		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 2.0
+				&& Math.abs(accelFilter[1]) < . && Math.abs(accelFilter[0]) < .4)
+				*/ 
+		if (Math.abs(accelFilter[2]) > .4 && Math.abs(accelZ) > 7) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
 				if (Math.abs(prevAccelFilter[2]) < .1) {
@@ -313,7 +319,7 @@ public class TapListenerService extends Service implements
 	 * updates the count for this day in the shared pref
 	 * the key value is the current day in the current year (1 - 365)
 	 */
-	private void updateSharedPref(){
+	public void updateSharedPref(){
 		/*
 		 * Shared Preferences
 		 * <numdays,#>
@@ -321,22 +327,7 @@ public class TapListenerService extends Service implements
 		 * <daycount, #>
 		 * <totalcount, #>
 		 */
-		/*
-		 * public static final String SPREF = "soapPreferences";
-	public static final String NUMDAYS_PREF = "number_days";
-	public static final String DAY_PREF = "current_day";
-	public static final String DAYCOUNT_PREF = "dailycount";
-	public static final String TOTALCOUNT_PREF = "totalcount";
-		 */
-		/*
-		Calendar c = Calendar.getInstance();
-		String day = c.get(Calendar.DAY_OF_YEAR) + "";
-		SharedPreferences spref = getSharedPreferences(SPREF, 0);
-		int prevCount = spref.getInt(day, 0);
-		Editor e = spref.edit();
-		e.putInt(day, ++prevCount);
-		e.commit();
-		*/
+	
 		Calendar c = Calendar.getInstance();
 		int currDay = c.get(Calendar.DAY_OF_YEAR);
 		String currDay_str = currDay + "";
@@ -351,6 +342,7 @@ public class TapListenerService extends Service implements
 		
 		int storedDay = sprefs.getInt(DAY_PREF, 0);
 		// new day of counting
+		
 		if (currDay > storedDay) {
 			//reset the daily count to one
 			e.putInt(DAYCOUNT_PREF, 1);
@@ -360,13 +352,16 @@ public class TapListenerService extends Service implements
 			int numDays = sprefs.getInt(NUMDAYS_PREF, 0);
 			e.putInt(NUMDAYS_PREF, ++numDays);
 			//
+			/*
 			String timestamp_str = sprefs.getString(currDay_str, "");
 			List<String> timestampList = new ArrayList<String>();
 			timestampList = g.fromJson(timestamp_str, listTimestamps);
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
+			*/
 		}
+		
 		// same day
 		else {
 			int dailyCnt = sprefs.getInt(DAYCOUNT_PREF, 0);
@@ -377,12 +372,17 @@ public class TapListenerService extends Service implements
 			//
 			String timestamp_str = sprefs.getString(currDay_str, "");
 			List<String> timestampList = new ArrayList<String>();
-			timestampList = g.fromJson(timestamp_str, listTimestamps);
+			/*
+			if (!timestamp_str.isEmpty()) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+			}
 			timestampList.add(timestamp);
 			timestamp_str = g.toJson(timestampList, listTimestamps);
 			e.putString(currDay_str, timestamp_str);
+			*/
 		}
 		
+		e.commit();
 		
 	}
 

@@ -251,7 +251,7 @@ public class ActionBarView extends View{
     		switchServiceButton();
     	}
     	else if (buttonNumber == EXPORT_BUTTON){
-    		//TODO
+    		soapGUI.exportData();
     	}
     }
     
