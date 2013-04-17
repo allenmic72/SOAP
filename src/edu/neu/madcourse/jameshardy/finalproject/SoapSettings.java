@@ -11,10 +11,14 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spannable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -25,6 +29,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class SoapSettings extends Activity implements OnClickListener, OnItemSelectedListener{
 
@@ -133,7 +138,18 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		
 		defaultEmail = (EditText) findViewById(R.id.soap_export_default_email_edit);
 		defaultEmail.setTypeface(helveticaLight);
-		defaultEmail.setOnClickListener(this);
+		defaultEmail.setOnKeyListener(new OnKeyListener() {
+		    public boolean onKey(View v, int keyCode, KeyEvent event) {
+		        // If the event is a key-down event on the "enter" button
+		        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+		            (keyCode == KeyEvent.KEYCODE_ENTER)) {
+		        	sprefSettingsData.defaultEmail = defaultEmail.getText().toString();
+		        	storeNewSettingsInSpref();
+		          return true;
+		        }
+		        return false;
+		    }
+		});
 		
 		sprefSettingsData = getSettingsFromSprefOrCreateNew();
 		setViewToSettingsData();
@@ -154,11 +170,6 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		case R.id.soap_to_time_picker_button:
 			showDialog(TO_TIME_DIALOG_ID);
 			break;
-		case R.id.soap_export_default_email_edit:
-			if (defaultEmail.getText().toString().equals(
-					getResources().getString(R.string.soap_default_email_text))){
-				defaultEmail.setText("");
-			}
 		}
 		
 	}
@@ -189,23 +200,23 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	}
 	
 	public void onAutoMonitorChecked(View view){
-		Log.d(TAG, "auto monitor checked");
 		boolean checked = ((CheckBox) view).isChecked();
 		    
 	    if (checked){
-	    	Log.d(TAG, "checkbox checked");
 	    	toggleAutoMonitorSettingsVisiblity(View.VISIBLE);
 	    }
 	    else{
-	    	Log.d(TAG, "checkbox unchecked");
 	    	toggleAutoMonitorSettingsVisiblity(View.INVISIBLE);
+	    	autoExport.setChecked(false);
 	    }
 	    sprefSettingsData.autoMonitor = checked;
 	    storeNewSettingsInSpref();
 	}
 	
 	public void onAutoExportChecked(View view){
-		
+		boolean checked = ((CheckBox) view).isChecked();
+		sprefSettingsData.autoExport = checked;
+	    storeNewSettingsInSpref();
 	}
 	
 	/**
@@ -343,6 +354,10 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		
 		fromDaySpinner.setSelection(sprefSettingsData.startDay);
 		toDaySpinner.setSelection(sprefSettingsData.endDay);
+		
+		autoExport.setChecked(sprefSettingsData.autoExport);
+		defaultEmail.setText(sprefSettingsData.defaultEmail);
+		
 		int visibility = View.VISIBLE;
 		if (!sprefSettingsData.autoMonitor){
 			visibility = View.INVISIBLE;

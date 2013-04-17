@@ -25,4 +25,10 @@ public class SoapSettingsHolder{
 	
 	@Expose
 	public int endTimeMinute = 00;
+	
+	@Expose
+	public boolean autoExport = true;
+	
+	@Expose
+	public String defaultEmail = "";
 }

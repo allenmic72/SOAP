@@ -214,7 +214,7 @@
        	android:layout_below="@id/soap_export_default_email_text"
        	android:textSize="18sp"
        	android:inputType="textEmailAddress"
-       	android:text="@string/soap_default_email_text"
+       	android:hint="@string/soap_default_email_text"
         />
     
     
