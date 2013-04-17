@@ -122,6 +122,6 @@ eliminate gravity from the accelerometer readings.
  	<string name="soap_auto_monitor_checkbox_text_bottom">
  	    Taps will be monitored during set period
  	</string>
- 	<string name="soap_circle_button_text">I\nWashed!</string>
+ 	<string name="soap_circle_button_text">W A S H</string>
 
 </resources>

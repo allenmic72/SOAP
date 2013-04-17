@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
@@ -60,6 +61,10 @@ public class SoapGUI extends Activity implements OnClickListener{
 		
 		View helpButton = findViewById(R.id.soap_help_button);
 		helpButton.setOnClickListener(this);
+		
+		Button washButton = (Button) findViewById(R.id.soap_manual_wash_button);
+		washButton.setOnClickListener(this);
+		washButton.setTypeface(helveticaLight);
 	}
 
 	
