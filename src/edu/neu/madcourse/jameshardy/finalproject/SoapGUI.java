@@ -391,7 +391,8 @@ public class SoapGUI extends Activity implements OnClickListener{
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		//intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"hardy.ja@husky.neu.edu"});
-		intent.putExtra(Intent.EXTRA_EMAIL, addr);
+		String emailaddress[] = { addr };
+		intent.putExtra(Intent.EXTRA_EMAIL, emailaddress);
 		intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
 		intent.putExtra(Intent.EXTRA_TEXT, "body text");
 		
