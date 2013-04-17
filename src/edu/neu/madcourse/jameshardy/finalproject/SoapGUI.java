@@ -136,9 +136,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 	private void updateTextField(int count) {
 		//post handwash count
 		if (count != 0) {
-			TextView tv = (TextView) findViewById(R.id.soap_washcount_text);
-			CharSequence cs = "Washed Hands " + count + " times";
-			tv.setText(cs);
+			countToday.setText("" + count);
 		} else {
 			Log.d(TAG, "count is null");
 		}

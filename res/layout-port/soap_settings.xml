@@ -63,7 +63,7 @@
        	android:layout_height="wrap_content"
        	android:layout_below="@id/soap_title_separator"
        	android:layout_toRightOf="@id/soap_auto_monitor_checkbox"
-       	android:textSize="18sp"
+       	android:textSize="22sp"
        	android:text="@string/soap_auto_monitor_checkbox_text_top"
        	/>
     
@@ -74,7 +74,7 @@
        	android:layout_below="@id/soap_auto_monitor_text_top"
        	android:layout_toRightOf="@id/soap_auto_monitor_checkbox"
        	android:layout_marginBottom="5dp"
-       	android:textSize="13sp"
+       	android:textSize="14sp"
        	android:text="@string/soap_auto_monitor_checkbox_text_bottom"
        	
        	/>
@@ -157,6 +157,65 @@
 	    android:layout_marginTop="10dp"
 	    android:layout_marginBottom="10dp"
 		/>
+    
+    <CheckBox
+        android:id="@+id/soap_auto_export_checkbox"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_times_separator"
+       	android:layout_marginRight="5dp"
+       	android:onClick="onAutoExportChecked"
+        />
+    
+    <TextView 
+        android:id="@+id/soap_auto_export_text_top"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_times_separator"
+       	android:layout_toRightOf="@id/soap_auto_export_checkbox"
+       	android:textSize="22sp"
+       	android:text="@string/soap_auto_export_text_top"
+       	/>
+    
+    <TextView
+        android:id="@+id/soap_auto_export_text_bottom"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_export_text_top"
+       	android:layout_toRightOf="@id/soap_auto_export_checkbox"
+       	android:layout_marginBottom="5dp"
+       	android:textSize="14sp"
+       	android:text="@string/soap_auto_export_text_bottom"
+       	/>
+    
+    <View
+        android:id="@+id/soap_auto_export_separator"
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dip"
+	    android:background="@color/soap_button_border"
+	    android:layout_below='@id/soap_auto_export_text_bottom'
+	    android:layout_marginTop="10dp"
+	    android:layout_marginBottom="10dp"
+		/>
+    
+    <TextView
+        android:id="@+id/soap_export_default_email_text"
+        android:layout_width="wrap_content"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_auto_export_separator"
+       	android:textSize="22sp"
+       	android:text="@string/soap_export_default_email_label"
+        />
+    
+    <EditText
+        android:id="@+id/soap_export_default_email_edit"
+        android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:layout_below="@id/soap_export_default_email_text"
+       	android:textSize="18sp"
+       	android:inputType="textEmailAddress"
+       	android:text="@string/soap_default_email_text"
+        />
     
     
     

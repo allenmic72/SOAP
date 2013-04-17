@@ -42,6 +42,11 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	TextView toTimeText;
 	Button toTimeButton;
 	CheckBox autoMonitor;
+	TextView autoExportTop;
+	TextView autoExportBottom;
+	CheckBox autoExport;
+	TextView emailLabel;
+	EditText defaultEmail;
 	
 	Typeface helveticaLight;
 	String[] items;
@@ -114,6 +119,22 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		toTimeButton.setOnClickListener(this);
 		toTimeButton.setTypeface(helveticaLight);
 		
+		autoExportTop = (TextView) findViewById(R.id.soap_auto_export_text_top);
+		autoExportTop.setTypeface(helveticaLight);
+		
+		autoExportBottom = (TextView) findViewById(R.id.soap_auto_export_text_bottom);
+		autoExportBottom.setTypeface(helveticaLight);
+		
+		autoExport = (CheckBox) findViewById(R.id.soap_auto_export_checkbox);
+		autoExport.setChecked(true); //TODO temporary
+		
+		emailLabel = (TextView) findViewById(R.id.soap_export_default_email_text);
+		emailLabel.setTypeface(helveticaLight);
+		
+		defaultEmail = (EditText) findViewById(R.id.soap_export_default_email_edit);
+		defaultEmail.setTypeface(helveticaLight);
+		defaultEmail.setOnClickListener(this);
+		
 		sprefSettingsData = getSettingsFromSprefOrCreateNew();
 		setViewToSettingsData();
 	}
@@ -133,6 +154,11 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		case R.id.soap_to_time_picker_button:
 			showDialog(TO_TIME_DIALOG_ID);
 			break;
+		case R.id.soap_export_default_email_edit:
+			if (defaultEmail.getText().toString().equals(
+					getResources().getString(R.string.soap_default_email_text))){
+				defaultEmail.setText("");
+			}
 		}
 		
 	}
@@ -176,6 +202,10 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	    }
 	    sprefSettingsData.autoMonitor = checked;
 	    storeNewSettingsInSpref();
+	}
+	
+	public void onAutoExportChecked(View view){
+		
 	}
 	
 	/**
