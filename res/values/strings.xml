@@ -113,7 +113,9 @@ screen locks and shuts off. Thank you to apple
 for high pass filter code so that we could 
 eliminate gravity from the accelerometer readings. 
 Thank you to the Christian Service Center for their
-soap image. And thank you to AndroidGenuine for 
+soap image. Thank you to the CSVopensource project
+and their API for easily creating excel combatible
+files. And thank you to AndroidGenuine for 
 the accelerometer tutorial. </string>
  	<string name="soap_settings_button">SOAP SETTINGS</string>
  	<string name="soap_export_data_button">EXPORT DATA</string>
