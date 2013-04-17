@@ -26,12 +26,13 @@
    <color name="pers_boggle_opponent_text">#FFCC0000</color>
    <color name="pers_boggle_paused_overlay_color">#FF919191</color>
    <color name="soap_title_color">#FF9EFFFF</color>
-   <color name="soap_action_button_text">#FF5ecdf6</color>
+   <color name="soap_action_button_text">#FF9EFFFF</color>
    <color name="soap_default_background">#EEb0bbbf</color>
    <color name="soap_buttons_focused">#FFff8902</color>
    <color name="soap_buttons_pressed">#FFff8902</color>
    <color name="soap_button_border">#FF4D4D4D</color>
    <color name="pure_white">#FFFFFFFF</color>
+   <color name="soap_back_icon_color">#FF33b5e5</color>
    
        
    
