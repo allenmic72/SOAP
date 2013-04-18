@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -16,6 +17,7 @@ import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -36,7 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import au.com.bytecode.opencsv.CSVWriter;
+//import au.com.bytecode.opencsv.CSVWriter;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettingsHolder;
@@ -122,6 +124,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 	
 	public void startService(){
 		Intent startService = new Intent(this, edu.neu.madcourse.jameshardy.finalproject.TapListenerService.class);
+		startService.putExtra(TapListenerService.MANUAL_START_EXTRA, TapListenerService.MANUAL_FLAG);
 		startService(startService); 
 	}
 	
@@ -346,14 +349,14 @@ public class SoapGUI extends Activity implements OnClickListener{
 		//Log.d(TAG, "NULL CHECK " + timestamp_str);
 		List<String> timestampList = new ArrayList<String>(){};
 		//Log.d(TAG, "NULL CHECK " + timestampList.toString());
-		if (!timestamp_str.isEmpty()) {
+		if (!timestamp_str.equals("")) {
 			timestampList = g.fromJson(timestamp_str, listTimestamps);
 		}
 		
 		fileName = "SOAP_" + currDay + ".csv";
 		fullPath = "/sdcard/"+fileName;
 		
-		CSVWriter writer = null;
+		/*CSVWriter writer = null;
 		try 
 		{
 		    //writer = new CSVWriter(new FileWriter("/sdcard/myfile.csv"), ',');
@@ -376,12 +379,46 @@ public class SoapGUI extends Activity implements OnClickListener{
 		catch (IOException e)
 		{
 		    //error
-		}
+		}*/
 		
 		return fileName;
 	}
+	
+	/**
+	 * Get service automatic start time from settings
+	 * set to this, or if none set use default (9:00AM)
+	 */
 	private void setServiceAlarm(){
+		Calendar c = Calendar.getInstance();
+		SoapSettingsHolder settings;
+		SharedPreferences spref = getSharedPreferences(SoapSettings.settingsSharedPrefName, 0);
+		String json = spref.getString(SoapSettings.settingsPrefDataKey, "");
+		if (json.equals("")){
+			settings = new SoapSettingsHolder();
+		}
+		else{
+			Gson gson = new Gson();
+			settings = gson.fromJson(json, SoapSettingsHolder.class);
+		}
+		int curTimeMinutes = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
+		int targetMinutes = settings.startTimeHour * 60 + settings.startTimeMinute;
+		int timeTillNextOccurance; //in minutes
+		if (targetMinutes > curTimeMinutes){
+			timeTillNextOccurance = targetMinutes - curTimeMinutes;
+		}
+		else{
+			//remainder of current day plus time to start it at next day
+			timeTillNextOccurance = 24 * 60 - curTimeMinutes + targetMinutes;
+		}		
+		long triggerServiceInMillis = c.getTimeInMillis() + timeTillNextOccurance * 60 * 1000;
 		
+		Intent intent = new Intent(this, TapListenerService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+
+		AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		
+		Log.d(TAG, "scheduling service to start in: " + timeTillNextOccurance / 60 + " hours plus " + timeTillNextOccurance%60 + " minutes");
+		alarm.setRepeating(AlarmManager.RTC_WAKEUP, triggerServiceInMillis, 24 * 60 * 60 * 1000, pintent); 
 	}
 	
 	private void sendEmail(String addr) {
