@@ -13,6 +13,9 @@ import edu.neu.madcourse.jameshardy.R;
 import edu.neu.madcourse.jameshardy.MultiplayerBoggle.MP_BoggleUser;
 import edu.neu.mobileclass.apis.KeyValueAPI;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -30,6 +33,8 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
 
@@ -126,6 +131,9 @@ public class TapListenerService extends Service implements
 					@Override
 					public void onFinish() {
 						Log.d(TAG, "service run time ended");
+						if (settings.autoExport){
+							sendExportNotification();
+						}
 						stopSelf();
 					}
 
@@ -430,6 +438,31 @@ public class TapListenerService extends Service implements
 		}
 		
 		e.commit();
+		
+	}
+	private void sendExportNotification(){
+		
+		NotificationManager notificationManager = (NotificationManager)
+                getSystemService(Context.NOTIFICATION_SERVICE);
+        
+        NotificationCompat.Builder notification = 
+        		new NotificationCompat.Builder(this)
+       			.setSmallIcon(R.drawable.soap_launcher)
+       			.setContentTitle("SOAP")
+       			.setContentText("Export your data from today!")
+       			.setAutoCancel(true);
+        Intent notificationIntent = new Intent(this, SoapGUI.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(notificationIntent);
+        
+        PendingIntent pendingIntent =
+                stackBuilder.getPendingIntent(
+                    0,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        notification.setContentIntent(pendingIntent);
+        notificationManager.notify(this.hashCode(), notification.build());
+
 		
 	}
 
