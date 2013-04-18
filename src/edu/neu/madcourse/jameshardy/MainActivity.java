@@ -43,6 +43,9 @@ public class MainActivity extends Activity implements OnClickListener {
         
         View exitButton = findViewById(R.id.exit_button);
         exitButton.setOnClickListener(this);
+        
+        View finalProjButton = findViewById(R.id.final_proj_button);
+        finalProjButton.setOnClickListener(this);
     }
 
     @Override
@@ -101,6 +104,10 @@ public class MainActivity extends Activity implements OnClickListener {
     		break;
     	case R.id.exit_button:
     		finish();
+    		break;
+    	case R.id.final_proj_button:
+    		i = new Intent(this, FinalProjActivity.class);
+    		startActivity(i);
     		break;
     	}
     }

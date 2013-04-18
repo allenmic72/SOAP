@@ -53,6 +53,11 @@
             android:label="@string/boggle_main_title"
             android:theme="@android:style/Theme.Black" >
         </activity>
+        <activity
+            android:name=".FinalProjActivity"
+            android:label="@string/final_proj_screen_title"
+            android:theme="@android:style/Theme.Dialog" >
+        </activity>
         <!-- SUDOKU ACTIVITIES -->
         <activity
             android:name="edu.neu.madcourse.jameshardy.sudoku.About"

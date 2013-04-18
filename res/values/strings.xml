@@ -16,6 +16,22 @@
     <string name="crash_button_title">Crash App</string>
     <string name="title_activity_crash">CrashActivity</string>
     <string name="exit_button_label">Exit</string>
+    <string name="final_proj_button">Final Project</string>
+    <string name="final_proj_screen_title">SOAP</string>
+    <string name="final_proj_screen">\
+Soap. Clean hands and a clean conscience.\n\n
+How clean are your hands? If you can\'t answer that, then you need Soap.\n\n
+With Soap, you\'ll have aggregated data on your daily hand washing habits. 
+You can export this data by email, and easily analyze it. This means it\'s 
+great for hospitals and other institutions.\n\n\n
+Soap Features:\n- A monitoring service that runs during user-defined periods\n
+- An easy way to signal a hand washing event - simply tap your phone with the 
+screen off\n- Automatic saving of daily hand washing data to a CSV spreadsheet 
+and quick exportation by email\n\nTo get started with Soap, just download it 
+and set up the automatic monitoring times. Then when you want to signal that 
+you\'ve washed your hands, just tap your phone\'s screen twice when the screen 
+is off. The phone will vibrate indicating that it\'s detected the signal. 
+Tap once more for confirmation, and you\'re all set!\n\n\n</string>
 
     <!-- SUDOKU RESOURCES -->
     <string name="sudoku_main_title">Android Sudoku</string>
