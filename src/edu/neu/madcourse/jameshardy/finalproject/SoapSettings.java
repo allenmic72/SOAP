@@ -7,10 +7,12 @@ import com.google.gson.Gson;
 import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -168,7 +170,7 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 			finish();
 			break;
 		case R.id.soap_settings_help_button:
-			//TODO
+			showHelpDialog();
 			break;
 		case R.id.soap_from_time_picker_button:
 			showDialog(FROM_TIME_DIALOG_ID);
@@ -424,5 +426,22 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		alarm.cancel(pintent);
 	}
 	
+	private void showHelpDialog(){
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+				this);
+ 
+			alertDialogBuilder.setTitle("Help");
+ 
+			alertDialogBuilder
+				.setMessage(getResources().getString(R.string.soap_settings_help_text))
+				.setPositiveButton("Thanks for the help",new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,int id) {
+						dialog.cancel();
+					}
+				  });
+ 
+				AlertDialog alertDialog = alertDialogBuilder.create();
+				alertDialog.show();
+	}
 	
 }
