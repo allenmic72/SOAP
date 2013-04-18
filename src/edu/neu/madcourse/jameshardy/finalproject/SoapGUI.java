@@ -73,7 +73,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 		
 		lastWashTime = (TextView) findViewById(R.id.soap_last_wash_time);
 		lastWashTime.setTypeface(helveticaLight);
-		lastWashTime.setText("Last wash 22 minutes ago");
+		lastWashTime.setText("");
 		
 		TextView countTodayText = (TextView) findViewById(R.id.soap_washcount_text);
 		countTodayText.setTypeface(helveticaLight);
@@ -115,6 +115,7 @@ public class SoapGUI extends Activity implements OnClickListener{
 			break;
 		case R.id.soap_manual_wash_button:
 			updateSharedPref();
+			updateGUI(false);
 			break;
 		
 		}
@@ -161,16 +162,8 @@ public class SoapGUI extends Activity implements OnClickListener{
         IntentFilter filter = new IntentFilter();
         filter.addAction(BROADCAST_ACTION);
         registerReceiver(receiver, filter);
-        int washCountToday = getCurrentWashCountFromSpref();
-        
         setServiceAlarm();
-        int totalWashCount = getTotalWashCountFromSpref();
-        int numDaysRecording = getNumDaysFromSpref();
-        double avg = 0;
-        if (numDaysRecording != 0) {
-        	avg = totalWashCount/numDaysRecording;
-        }
-        updateTextField(washCountToday, avg);
+        updateGUI(true);
         super.onResume();
     }
 
@@ -180,13 +173,92 @@ public class SoapGUI extends Activity implements OnClickListener{
         super.onPause();
     }
 	
-	private void updateTextField(int count, double avg) {
+    private void updateGUI(boolean updateFromOnResume) {
+    	int washCountToday = getCurrentWashCountFromSpref();
+        int totalWashCount = getTotalWashCountFromSpref();
+        int numDaysRecording = getNumDaysFromSpref();
+        double avg = 0;
+        if (numDaysRecording != 0) {
+        	avg = totalWashCount/numDaysRecording;
+        }
+        int secSinceLastWash = getTimeSinceLastWash();
+        Log.d(TAG, "min = " + secSinceLastWash);
+        updateTextField(washCountToday, avg, secSinceLastWash, 
+        		updateFromOnResume);
+    }
+    
+	private void updateTextField(int count, double avg, int sec, 
+			boolean fromOnResume) {
 		//post handwash count
 		if (count != 0 && avg != 0) {
 			countToday.setText("" + count);
 			averageCount.setText("" + avg);
 		} else {
 			Log.d(TAG, "count is null");
+		}
+		if (fromOnResume) {
+		if (sec > 360) {
+			int hours = sec / 360;
+			int remainder = sec - hours * 360;
+			int minutes = remainder / 60;
+			int seconds = remainder - minutes * 60;
+			
+			lastWashTime.setText("Last wash was " + hours 
+					+ " hours, " + minutes + " minutes, and "
+					+ seconds + " seconds ago!");
+			//TODO: last wash over an hour ago...send notification
+		}
+		else if (sec > 60) {
+			int minutes = sec / 60;
+			int seconds = sec - minutes * 60;
+			lastWashTime.setText("Last wash was " 
+					+ minutes + " minutes and "
+					+ seconds + " seconds ago.");
+		}
+		else if (sec > 0) {
+			lastWashTime.setText("Last wash was " 
+					+ sec + " seconds ago.");
+		}
+		else {
+			//min value = -1, means from another day
+			lastWashTime.setText("Last wash was over a day ago!");
+		}
+		}
+		else {
+			lastWashTime.setText("Good job washing your hands!\n" +
+								 "Try not to touch the screen\n " +
+								 "next time, it's dirty!");
+		}
+	}
+	
+	private int getTimeSinceLastWash() {
+		Gson g = new Gson();
+		Type listTimestamps = new TypeToken<List<String>>(){}.getType();
+		SharedPreferences sprefs = getSharedPreferences(TapListenerService.SPREF, 0);
+		Calendar c = Calendar.getInstance();
+		int currDay = c.get(Calendar.DAY_OF_YEAR);
+		String currDay_str = currDay + "";
+		String timestamp_str = sprefs.getString(currDay_str, "");
+		//Log.d(TAG, "NULL CHECK " + timestamp_str);
+		List<String> timestampList = new ArrayList<String>(){};
+		//Log.d(TAG, "NULL CHECK " + timestampList.toString());
+		if (!timestamp_str.isEmpty()) {
+			timestampList = g.fromJson(timestamp_str, listTimestamps);
+		}
+		if (!timestampList.isEmpty()) {
+			Log.d(TAG, "hitting calc min");
+			int size = timestampList.size();
+			//Timestamp t = new Timestamp();
+			long prev_epoch = Timestamp.valueOf(timestampList.get(size-1)).getTime();
+			Log.d(TAG,  " prev = " + prev_epoch);
+			long curr_epoch = c.getTime().getTime();
+			Log.d(TAG,  " curr = " + curr_epoch);
+			long diff = curr_epoch - prev_epoch;
+			int sec_since = (int)(diff / 1000.0);
+			return sec_since;
+		}
+		else {
+			return -1;
 		}
 	}
 	
@@ -428,7 +500,8 @@ public class SoapGUI extends Activity implements OnClickListener{
 		Intent intent = new Intent(Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		//intent.putExtra(Intent.EXTRA_EMAIL, new String[] {"hardy.ja@husky.neu.edu"});
-		intent.putExtra(Intent.EXTRA_EMAIL, addr);
+		String emailaddress[] = { addr };
+		intent.putExtra(Intent.EXTRA_EMAIL, emailaddress);
 		intent.putExtra(Intent.EXTRA_SUBJECT, "subject here");
 		intent.putExtra(Intent.EXTRA_TEXT, "body text");
 		
