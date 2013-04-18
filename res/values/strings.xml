@@ -134,15 +134,18 @@ has sensed you washed your hands. Use the <i>Export
 Data</i> button to send the day\'s data to a specified 
 email address. It will send a CSV Excel spreadsheet.\n\n 
 <b>Acknowledgements:</b>\n\n\tWe would like to acknowledge 
-user MyLock on stackoverflow for providing us answers 
+user MyLock on StackOverflow for providing us answers 
 and code in order to keep our service running when the 
-screen locks and shuts off. Thank you to apple
-for high pass filter code so that we could 
+screen locks and shuts off. Other examples on StackOverflow were also helpful.
+Thank you to apple
+for high pass filter code (adapted from Obj-C) so that we could 
 eliminate gravity from the accelerometer readings. 
 Thank you to the Christian Service Center for their
 soap image. Thank you to the CSVopensource project
 and their API for easily creating excel combatible
-files. And thank you to AndroidGenuine for 
+files. Thanks to http://ttfonts.net/ for providing ttf font files. 
+Thanks to Android Asset Studio for providing awesome button icons and colors. 
+And thank you to AndroidGenuine for 
 the accelerometer tutorial. \n\nWe tested our app 
 on the following devices:\n\nMotorola Droid Bionic
 \nHTC Droid DNA\n</string>
