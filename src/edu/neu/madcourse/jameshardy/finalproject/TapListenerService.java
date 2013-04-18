@@ -301,6 +301,7 @@ public class TapListenerService extends Service implements
 			if (count_down > 0) {
 				count_down--;
 				// end of Tap
+				double accel_diff = Math.abs(accelX) - 9.81;
 				if (Math.abs(accelFilter[2]) < .1) {
 					if ((curTime - last_tap_time) > 500.0) {
 						tap_count++;
@@ -320,17 +321,14 @@ public class TapListenerService extends Service implements
 				//count_down = 6;
 				count_down = 6;
 				POTENTIAL_TAP = false;
-				//FALSE_TAP = true;
+
 			}
 		}
-/*
-		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 2.0
-				&& Math.abs(accelFilter[1]) < . && Math.abs(accelFilter[0]) < .4)
-				*/ 
+		
 		double compY = Math.abs(accelY) *2;
 		double compX = Math.abs(accelX) *2;
-		if (Math.abs(accelFilter[2]) > .4 && Math.abs(accelZ) > compY 
-				&& Math.abs(accelZ) > compX) {
+		if (Math.abs(accelFilter[2]) > .4 && accelFilter[2] < 1.0 
+				&& Math.abs(accelZ) > compY && Math.abs(accelZ) > compX) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
 				if (Math.abs(prevAccelFilter[2]) < .1) {
@@ -340,14 +338,7 @@ public class TapListenerService extends Service implements
 				}
 			}
 		}
-		
-		if (FALSE_TAP == true) {
-			POTENTIAL_TAP = false;
-			FALSE_TAP = false;
-		}
-		
-
-		
+				
 		prevAccelFilter[0] = accelFilter[0];
 		prevAccelFilter[1] = accelFilter[1];
 		prevAccelFilter[2] = accelFilter[2];

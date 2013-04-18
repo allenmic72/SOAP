@@ -104,11 +104,22 @@ Can not use the same word twice. </string>
     <string name="soap_main_label">S  O  A  P</string>
     <string name="soap_kill_service">STOP MONITORING</string>
     <string name="soap_ack_button_title">Acknowledgements</string>
-    <string name="soap_title_acknowledgements">SOAP Acknowledgements</string>
+    <string name="soap_title_acknowledgements">SOAP Information</string>
     <string name="soap_acknowledgements">\
-We would like to acknowledge user MyLock
-on stackoverflow for providing us answers and code
-in order to keep our service running when the 
+<b>Instructions:</b>\n\n
+\tVisit the <i>User Settings</i> page to set automatic 
+sensing of hand washing when the screen is off. Or 
+simply hit the <i>Start Monitor</i> button. If you want 
+to turn this monitor off, hit <i>Stop Monitor</i>. When 
+sensing is turned on and the screen is off, tap 
+until you feel it vibrate, then tap again for a 
+double vibrate. The double vibration means the phone 
+has sensed you washed your hands. Use the <i>Export 
+Data</i> button to send the day\'s data to a specified 
+email address. It will send a CSV Excel spreadsheet.\n\n 
+<b>Acknowledgements:</b>\n\n\tWe would like to acknowledge 
+user MyLock on stackoverflow for providing us answers 
+and code in order to keep our service running when the 
 screen locks and shuts off. Thank you to apple
 for high pass filter code so that we could 
 eliminate gravity from the accelerometer readings. 
@@ -116,7 +127,9 @@ Thank you to the Christian Service Center for their
 soap image. Thank you to the CSVopensource project
 and their API for easily creating excel combatible
 files. And thank you to AndroidGenuine for 
-the accelerometer tutorial. </string>
+the accelerometer tutorial. \n\nWe tested our app 
+on the following devices:\n\nMotorola Droid Bionic
+\nHTC Droid DNA\n</string>
  	<string name="soap_settings_button">SOAP SETTINGS</string>
  	<string name="soap_export_data_button">EXPORT DATA</string>
  	<string name="soap_settings_title">SETTINGS</string>
