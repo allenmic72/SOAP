@@ -126,9 +126,9 @@ the accelerometer tutorial. </string>
  	    Taps will be monitored during set period
  	</string>
  	<string name="soap_circle_button_text">W A S H</string>
- 	<string name="soap_auto_export_text_top">Auto Export</string>
+ 	<string name="soap_auto_export_text_top">Export Notification</string>
  	<string name="soap_auto_export_text_bottom">
- 	    Data will be exported automatically by email
+ 	    Notify me to export data
 	</string>
 	<string name="soap_default_email_text">example@gmail.com</string>
 	<string name="soap_export_default_email_label">Default export email address</string>
