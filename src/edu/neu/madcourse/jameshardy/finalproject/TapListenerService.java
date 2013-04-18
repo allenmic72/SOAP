@@ -335,14 +335,18 @@ public class TapListenerService extends Service implements
 		
 		double compY = Math.abs(accelY) *2;
 		double compX = Math.abs(accelX) *2;
-		if (Math.abs(accelFilter[2]) > .4 && accelFilter[2] < 1.0 
-				&& Math.abs(accelZ) > compY && Math.abs(accelZ) > compX) {
+		if (Math.abs(accelFilter[2]) > .4) {  
+				//&& Math.abs(accelZ) > compY && Math.abs(accelZ) > compX) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
 				if (Math.abs(prevAccelFilter[2]) < .1) {
 					// mark as potential tap
 					POTENTIAL_TAP = true;
-					
+					//reset count to zero on tap if last tap was 
+					//more than 3 seconds prior
+					if ((curTime - last_tap_time) > 2000) {
+						tap_count = 0;
+					}
 				}
 			}
 		}
