@@ -1,5 +1,7 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
+import java.util.Calendar;
+
 import edu.neu.madcourse.jameshardy.R;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -36,6 +38,9 @@ public class ActionBarView extends View{
 	Paint pressedState;
 	Paint buttonBorderColor;
 	int moveEventButtonId = -1;
+	
+	Calendar c;
+	long lastUpdateTime = 0;
 	private final SoapGUI soapGUI;
 	
 	public ActionBarView(Context context, AttributeSet attrs) {
@@ -43,6 +48,7 @@ public class ActionBarView extends View{
 		this.soapGUI = (SoapGUI) context;
 		
 		setProperServiceVariables();
+		c = Calendar.getInstance();
 	}
 	
 	@Override
@@ -97,6 +103,12 @@ public class ActionBarView extends View{
     	
     	//draw line across the top of the view for button border
     	canvas.drawLine(0, 0, viewWidth, 0, buttonBorderColor);
+    	
+    	//update the service button only maximum of every 30 seconds
+    	if (c != null && c.getTimeInMillis() - lastUpdateTime > 30000){
+    		setProperServiceVariables();
+    		lastUpdateTime = c.getTimeInMillis();
+    	}
     	
 	    	
     }

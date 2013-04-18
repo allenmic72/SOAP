@@ -25,11 +25,13 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.Vibrator;
 import android.util.Log;
+import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
 
 public class TapListenerService extends Service implements
 		SensorEventListener {
@@ -40,7 +42,10 @@ public class TapListenerService extends Service implements
 	public static final String DAY_PREF = "current_day";
 	public static final String DAYCOUNT_PREF = "dailycount";
 	public static final String TOTALCOUNT_PREF = "totalcount";
-
+	public static final String MANUAL_START_EXTRA = "MANUAL";
+	public static final int MANUAL_FLAG = 1;
+	private long timeToRun;
+	
 	private SensorManager mSensorManager;
 	private Sensor mAccelerometer;
 
@@ -58,6 +63,9 @@ public class TapListenerService extends Service implements
 
 	private static final int SHAKE_THRESHOLD = 9;
 	private static final int Z_THRESHOLD = 20;
+	
+	SoapSettingsHolder settings;
+	CountDownTimer timer;
 
 	//TODO MAKE SURE TO ONLY REGISTER SERVICE ON SCREEN OFF
 	
@@ -80,7 +88,58 @@ public class TapListenerService extends Service implements
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (intent.getIntExtra(MANUAL_START_EXTRA, 0) != MANUAL_FLAG){
+			//automatically started, set timer to kill service at correct time
+			//but first check if the service should run this day
+			SharedPreferences spref = getSharedPreferences(SoapSettings.settingsSharedPrefName, 0);
+			String json = spref.getString(SoapSettings.settingsPrefDataKey, "");
+			if (!json.equals("")){
+				Gson gson = new Gson();
+				settings = gson.fromJson(json, SoapSettingsHolder.class);
+			}
+			else{
+				settings = new SoapSettingsHolder();
+			}
+			Calendar c = Calendar.getInstance();
+			int today = c.get(Calendar.DAY_OF_WEEK);
+			int startDay = settings.startDay + 1; //add one because Calendar.DAY_OF_WEEK starts at 1
+			int endDay = settings.endDay + 1;
+			if (endDay - today >= 0 && today - startDay >= 0){
+				int currMins = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
+				int endMins = settings.endTimeHour * 60 + settings.endTimeMinute;
+				long runLength;
+				if (endMins > currMins){ //end today
+					runLength = (endMins - currMins) * 60 * 1000;
+				}
+				else{ //end some time next day
+					runLength = 24 * 60 - currMins + endMins;
+					runLength = runLength * 60 * 1000;
+				}
+				
+				if (runLength <= 0){
+					stopSelf();
+					Log.d(TAG, "Error: bad run length: " + runLength);
+				}
+				Log.d(TAG, "service runtime in mins: " + runLength/60000);
+				timer = new CountDownTimer(runLength, runLength){
 
+					@Override
+					public void onFinish() {
+						Log.d(TAG, "service run time ended");
+						stopSelf();
+					}
+
+					@Override
+					public void onTick(long arg0) {
+					}
+					
+				}.start();
+			}
+			else{ //service doesn't run today
+				Log.d(TAG, "stopping service, not scheduled to run today");
+				stopSelf();
+			}
+		}
 		// Log.d(TAG, "START COMMAND");
 		// We want this service to continue running until it is explicitly
 		// stopped, so return sticky.

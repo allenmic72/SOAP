@@ -1,11 +1,17 @@
 package edu.neu.madcourse.jameshardy.finalproject;
 
+import java.util.Calendar;
+
 import com.google.gson.Gson;
 
 import edu.neu.madcourse.jameshardy.R;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
@@ -36,8 +42,8 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 	private static final String TAG = "SOAP SETTINGS";
 	private static final int TO_TIME_DIALOG_ID = 34;
 	private static final int FROM_TIME_DIALOG_ID = 76;
-	private static final String settingsSharedPrefName = "SoapSettings";
-	private static final String settingsPrefDataKey = "settings";
+	public static final String settingsSharedPrefName = "SoapSettings";
+	public static final String settingsPrefDataKey = "settings";
 	//auto monitor specific time settings
 	Spinner fromDaySpinner;
 	Spinner toDaySpinner;
@@ -192,6 +198,7 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 			sprefSettingsData.startDay = dayId;
 		}
 		storeNewSettingsInSpref();
+		setServiceAlarm();
 		
 	}
 
@@ -204,10 +211,12 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		    
 	    if (checked){
 	    	toggleAutoMonitorSettingsVisiblity(View.VISIBLE);
+	    	setServiceAlarm();
 	    }
 	    else{
 	    	toggleAutoMonitorSettingsVisiblity(View.INVISIBLE);
 	    	autoExport.setChecked(false);
+	    	cancelPendingAlarm();
 	    }
 	    sprefSettingsData.autoMonitor = checked;
 	    storeNewSettingsInSpref();
@@ -294,6 +303,7 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 			sprefSettingsData.startTimeHour = selectedHour;
 			sprefSettingsData.startTimeMinute = selectedMinute;
 			storeNewSettingsInSpref();
+			setServiceAlarm();
 		}
 	};
 	
@@ -305,6 +315,7 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 			sprefSettingsData.endTimeHour = selectedHour;
 			sprefSettingsData.endTimeMinute = selectedMinute;
 			storeNewSettingsInSpref();
+			setServiceAlarm();
 			}
 	};
 	
@@ -373,6 +384,44 @@ public class SoapSettings extends Activity implements OnClickListener, OnItemSel
 		String json = gson.toJson(sprefSettingsData);
 		e.putString(settingsPrefDataKey, json);
 		e.commit();
+	}
+	
+	/**
+	 * Get service automatic start time from settings
+	 * set to this, or if none set use default (9:00AM)
+	 */
+	private void setServiceAlarm(){
+		Calendar c = Calendar.getInstance();
+		int curTimeMinutes = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
+		int targetMinutes = sprefSettingsData.startTimeHour * 60 + sprefSettingsData.startTimeMinute;
+		int timeTillNextOccurance; //in minutes
+		if (targetMinutes > curTimeMinutes){
+			timeTillNextOccurance = targetMinutes - curTimeMinutes;
+		}
+		else{
+			//remainder of current day plus time to start it at next day
+			timeTillNextOccurance = 24 * 60 - curTimeMinutes + targetMinutes;
+		}		
+		long triggerServiceInMillis = c.getTimeInMillis() + timeTillNextOccurance * 60 * 1000;
+		
+		Intent intent = new Intent(this, TapListenerService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+
+		AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		
+		Log.d(TAG, "scheduling service to start in: " + timeTillNextOccurance / 60 + " hours plus " + timeTillNextOccurance%60 + " minutes");
+		alarm.setRepeating(AlarmManager.RTC_WAKEUP, triggerServiceInMillis, 24 * 60 * 60 * 1000, pintent); 
+	}
+	
+	/**
+	 * cancels alarm manager, called if user unchecks automatic monitoring
+	 */
+	private void cancelPendingAlarm(){
+		Intent intent = new Intent(this, TapListenerService.class);
+		PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
+
+		AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		alarm.cancel(pintent);
 	}
 	
 	
