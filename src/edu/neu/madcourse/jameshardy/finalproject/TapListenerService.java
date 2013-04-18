@@ -327,32 +327,24 @@ public class TapListenerService extends Service implements
 				// reset
 				//count_down = 6;
 				count_down = 6;
-				//POTENTIAL_TAP = false;
-				FALSE_TAP = true;
+				POTENTIAL_TAP = false;
+				//FALSE_TAP = true;
 			}
 		}
 /*
 		if (Math.abs(accelFilter[2]) > .3 && Math.abs(accelFilter[2]) < 2.0
 				&& Math.abs(accelFilter[1]) < . && Math.abs(accelFilter[0]) < .4)
 				*/ 
-		if (Math.abs(accelFilter[2]) > .4 && Math.abs(accelZ) > 7) {
+		double compY = Math.abs(accelY) *2;
+		double compX = Math.abs(accelX) *2;
+		if (Math.abs(accelFilter[2]) > .4 && Math.abs(accelZ) > compY 
+				&& Math.abs(accelZ) > compX) {
 			if (POTENTIAL_TAP == false) {
 				// start of Tap
 				if (Math.abs(prevAccelFilter[2]) < .1) {
 					// mark as potential tap
 					POTENTIAL_TAP = true;
-					/*
-					if (!IS_FIRST_TAP) {
-						if ((curTime - start_time) > 1000.0) {
-							// taps too far apart, treat as first tap
-							tap_count = 0;
-							// IS_FIRST_TAP = true;
-						}
-					} else {
-						// first tap, set to false after
-						IS_FIRST_TAP = false;
-					}
-					*/
+					
 				}
 			}
 		}
