@@ -466,10 +466,9 @@ public class SoapGUI extends Activity implements OnClickListener {
 		}
 
 		fileName = "SOAP_" + currDay + ".csv";
-		fullPath = "/sdcard/" + fileName;
-		//fullPath = fileName;
-
-		File file = getBaseContext().getFileStreamPath(fileName);
+		File root = Environment.getExternalStorageDirectory();
+		File file = new File(root, fileName);
+		fullPath = "" + file;
 		if (file.exists()) {
 			// file exists delete it then create new one;
 			if (file.delete()) {
