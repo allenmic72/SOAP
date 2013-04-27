@@ -110,7 +110,7 @@ public class TapListenerService extends Service implements
 			int today = c.get(Calendar.DAY_OF_WEEK);
 			int startDay = settings.startDay + 1; //add one because Calendar.DAY_OF_WEEK starts at 1
 			int endDay = settings.endDay + 1;
-			if (endDay - today >= 0 && today - startDay >= 0){
+			if (settings.autoMonitor && endDay - today >= 0 && today - startDay >= 0){
 				int currMins = c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
 				int endMins = settings.endTimeHour * 60 + settings.endTimeMinute;
 				long runLength;

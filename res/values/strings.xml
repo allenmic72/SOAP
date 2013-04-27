@@ -158,9 +158,9 @@ on the following devices:\n\nMotorola Droid Bionic
  	    Taps will be monitored during set period
  	</string>
  	<string name="soap_circle_button_text">W A S H</string>
- 	<string name="soap_auto_export_text_top">Export Notification</string>
+ 	<string name="soap_auto_export_text_top">Export Reminder</string>
  	<string name="soap_auto_export_text_bottom">
- 	    Notify me to export data
+ 	    Remind me to export daily wash data
 	</string>
 	<string name="soap_default_email_text">example@gmail.com</string>
 	<string name="soap_export_default_email_label">Default export email address</string>
@@ -168,7 +168,7 @@ on the following devices:\n\nMotorola Droid Bionic
 	    \tSelect Auto monitor if you want Soap to automatically monitor your taps on the phone
 	    at specific times, such as your work day. To select the time range, choose a start day and an end day
 	    and a start and end time for each day (ex. Mon - Fri, 9am - 5pm)
-	    \n\n\tSelecting Export Notification will cause a notification to appear when the monitoring service ends each day.
+	    \n\n\tExport Reminder will pop up a notification to remind you to export your data at the end of the day
 	    \n\n\tAdd a default email so that you won\'t have to provide it each time you export data.
 	</string>
 
