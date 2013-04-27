@@ -379,19 +379,20 @@ public class SoapGUI extends Activity implements OnClickListener {
 			if (dailyCnt > 0 && totalCnt > 0) {
 				e.putInt(TOTALCOUNT_PREF, --totalCnt);
 				e.putInt(DAYCOUNT_PREF, --dailyCnt);
-			}
-			String timestamp_str = sprefs.getString(currDay_str, "");
-			// Log.d(TAG, "NULL CHECK " + timestamp_str);
-			List<String> timestampList = new ArrayList<String>() {
-			};
-			// Log.d(TAG, "NULL CHECK " + timestampList.toString());
-			if (!timestamp_str.equals("")) {
-				timestampList = g.fromJson(timestamp_str, listTimestamps);
-				timestampList.remove(timestampList.size() - 1);
-			}
+				
+				String timestamp_str = sprefs.getString(currDay_str, "");
+				// Log.d(TAG, "NULL CHECK " + timestamp_str);
+				List<String> timestampList = new ArrayList<String>() {
+				};
+				// Log.d(TAG, "NULL CHECK " + timestampList.toString());
+				if (!timestamp_str.equals("")) {
+					timestampList = g.fromJson(timestamp_str, listTimestamps);
+					timestampList.remove(timestampList.size() - 1);
+				}
 
-			timestamp_str = g.toJson(timestampList, listTimestamps);
-			e.putString(currDay_str, timestamp_str);
+				timestamp_str = g.toJson(timestampList, listTimestamps);
+				e.putString(currDay_str, timestamp_str);
+			}
 
 			e.commit();
 
