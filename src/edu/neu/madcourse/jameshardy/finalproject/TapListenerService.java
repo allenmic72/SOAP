@@ -68,6 +68,7 @@ public class TapListenerService extends Service implements
 
 	private static final int SHAKE_THRESHOLD = 9;
 	private static final int Z_THRESHOLD = 20;
+	private static final int TAP_THRESHOLD = 3;
 	
 	SoapSettingsHolder settings;
 	CountDownTimer timer;
@@ -210,7 +211,43 @@ public class TapListenerService extends Service implements
 			long diffTime = (curTime - lastEventTime);
 			lastEventTime = curTime;
 			
-			highPassFilter(x, y, z, diffTime);
+			int state = highPassFilter(x, y, z, diffTime);
+			
+			//Log.d(TAG, "STATE: " + state);
+			
+			switch (heldState) {
+			case PulseState.NonActive:
+				heldState = state;
+				break;
+			case PulseState.NegativePulse:
+				if (state == PulseState.PositivePulse
+						&& (curTime - last_detect_time) > 500) {
+					if (curTime-last_detect_time > 3000) {
+						//reset tap count
+						tap_count = 0;
+					}
+					Log.d(TAG, "TAP DETECTED");
+					heldState = 0;
+					last_detect_time = curTime;
+					tap_count++;
+				} else
+					heldState = state;
+				break;
+			case PulseState.PositivePulse:
+				if (state == PulseState.NegativePulse
+						&& (curTime - last_detect_time) > 500) {
+					if (curTime-last_detect_time > 3000) {
+						//reset tap count
+						tap_count = 0;
+					}
+					Log.d(TAG, "TAP DETECTED");
+					heldState = 0;
+					last_detect_time = curTime;
+					tap_count++;
+				} else
+					heldState = state;
+				break;
+			}
 			
 			if (tap_count == 1) {
 				if (LISTEN_FOR_HANDSHAKE == true) {
@@ -223,7 +260,7 @@ public class TapListenerService extends Service implements
 					updateSharedPref();
 				} 
 			}
-			if (tap_count == 2) {
+			if (tap_count == 3) {
 				v.vibrate(300);
 				LISTEN_FOR_HANDSHAKE = true;
 				tap_count = 0;
@@ -234,8 +271,7 @@ public class TapListenerService extends Service implements
 			last_y = y;
 			last_z = z;
 
-		} 
-		else {
+		} else {
 			lastEventTime = curTime;
 		}
 
@@ -255,6 +291,9 @@ public class TapListenerService extends Service implements
 	float lastAccel[] = new float[3];
 	float accelFilter[] = new float[3];
 	float prevAccelFilter[] = new float[3];
+	int heldState = 0;
+	long state_timestamp = 0;
+	long last_detect_time = 0;
 	/*
 	 * float z_stack[] = new float[5]; private int stack_count = 0; private int
 	 * tap_count = 0; private int registered_taps = 0;
@@ -265,6 +304,14 @@ public class TapListenerService extends Service implements
 	private long last_tap_time = 0;
 	private long start_time = 0;
 	private int handwash_count = 0;
+	
+	// Accelerometer data state
+	class PulseState {
+		public static final int NonActive = 0;
+		public static final int PositivePulse = 1;
+		public static final int NegativePulse = 2;
+		public static final int UnknownPulse = -1;
+	};
 
 	/**
 	 * Adaptation of Apple's high pass filter Gotta be good since it's an apple
@@ -274,7 +321,7 @@ public class TapListenerService extends Service implements
 	 * @param accelY
 	 * @param accelZ
 	 */
-	public void highPassFilter(float accelX, float accelY, float accelZ,
+	public int highPassFilter(float accelX, float accelY, float accelZ,
 			long diffTime) {
 		// high pass filter
 		float updateFreq = 30; // match this to your update speed
@@ -305,55 +352,62 @@ public class TapListenerService extends Service implements
 		lastAccel[1] = accelY;
 		lastAccel[2] = accelZ;
 		
-		if (POTENTIAL_TAP == true) {
-			if (count_down > 0) {
-				count_down--;
-				// end of Tap
-				double accel_diff = Math.abs(accelX) - 9.81;
-				if (Math.abs(accelFilter[2]) < .1) {
-					if ((curTime - last_tap_time) > 500.0) {
-						tap_count++;
-						last_tap_time = curTime;
-						Log.d(TAG,"Recorded Tap");
-					}
-					//start_time = curTime;
-					//IS_FIRST_TAP = false;
-					//reset
-					count_down = 6;
-					POTENTIAL_TAP = false;
-				}
+		if (state_timestamp == 0) {
+			state_timestamp = curTime;
+		}
+		int prevState = heldState;
+		int currState = 0;
+		
+		//Log.d(TAG, "z   " + accelZ);
+		if ((Math.abs(Math.abs(accelZ) - 9.81)) > TAP_THRESHOLD) {
+			double diffZ = Math.abs(accelZ) - 9.81;
+			//Log.d(TAG, "diff   " + diffZ);
+			if (diffZ > 0) {
+				currState = PulseState.PositivePulse;
 			}
-			// not tap
 			else {
-				// reset
-				//count_down = 6;
-				count_down = 6;
-				POTENTIAL_TAP = false;
-
+				currState = PulseState.NegativePulse;
 			}
+		}
+		else {
+			currState = PulseState.NonActive;
 		}
 		
-		double compY = Math.abs(accelY) *2;
-		double compX = Math.abs(accelX) *2;
-		if (Math.abs(accelFilter[2]) > .4) {  
-				//&& Math.abs(accelZ) > compY && Math.abs(accelZ) > compX) {
-			if (POTENTIAL_TAP == false) {
-				// start of Tap
-				if (Math.abs(prevAccelFilter[2]) < .1) {
-					// mark as potential tap
-					POTENTIAL_TAP = true;
-					//reset count to zero on tap if last tap was 
-					//more than 3 seconds prior
-					if ((curTime - last_tap_time) > 2000) {
-						tap_count = 0;
-					}
-				}
+		//Log.d(TAG, "CURR STATE  " + currState);
+		
+		switch (prevState) {
+		case PulseState.NonActive:
+			//if (currState != PulseState.NonActive && (curTime - state_timestamp) < 150) {
+			if (currState != PulseState.NonActive) {
+				prevState = currState;
+				state_timestamp = curTime;
+				//Log.d(TAG, "HIT NONACTIVE");
 			}
+			break;
+		case PulseState.NegativePulse:
+			if (currState == PulseState.PositivePulse && (curTime - state_timestamp) < 150) {
+				prevState = currState;
+				state_timestamp = curTime;
+				//Log.d(TAG, "HIT NEG");
+			}
+			break;
+		case PulseState.PositivePulse:
+			if (currState == PulseState.NegativePulse && (curTime - state_timestamp) < 150) {
+				prevState = currState;
+				state_timestamp = curTime;
+				//Log.d(TAG, "HIT POS");
+			}
+			break;
 		}
+		
+		//prevState = currState;
 				
 		prevAccelFilter[0] = accelFilter[0];
 		prevAccelFilter[1] = accelFilter[1];
 		prevAccelFilter[2] = accelFilter[2];
+		
+		//return prevState;
+		return currState;
 	}
 
 	private float norm(float x, float y, float z) {

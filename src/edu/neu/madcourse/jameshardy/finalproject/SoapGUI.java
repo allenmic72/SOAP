@@ -39,6 +39,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import au.com.bytecode.opencsv.CSVWriter;
 //import au.com.bytecode.opencsv.CSVWriter;
 import edu.neu.madcourse.jameshardy.finalproject.TapListenerService;
 import edu.neu.madcourse.jameshardy.finalproject.SoapSettings;
@@ -441,19 +442,35 @@ public class SoapGUI extends Activity implements OnClickListener {
 		fileName = "SOAP_" + currDay + ".csv";
 		fullPath = "/sdcard/" + fileName;
 
-		/*
-		 * CSVWriter writer = null; try { //writer = new CSVWriter(new
-		 * FileWriter("/sdcard/myfile.csv"), ','); writer = new CSVWriter(new
-		 * FileWriter(fullPath), ','); if (timestampList.isEmpty()) { String[]
-		 * entries = "today#no data".split("#"); writer.writeNext(entries); }
-		 * else { for (int i = 0; i < timestampList.size(); i++) { int count =
-		 * i+1; String entry = count+"#"+timestampList.get(i); String[] entries
-		 * = entry.split("#"); writer.writeNext(entries); } }
-		 * 
-		 * writer.close(); } catch (IOException e) { //error }
-		 */
+		File file = getBaseContext().getFileStreamPath(fileName);
+		if (file.exists()) {
+			// file exists don't create
+			return fileName;
+		} else {
+			CSVWriter writer = null;
+			try {
+				// writer = new CSVWriter(new FileWriter("/sdcard/myfile.csv"),
+				// ',');
+				writer = new CSVWriter(new FileWriter(fullPath), ',');
+				if (timestampList.isEmpty()) {
+					String[] entries = "today#no data".split("#");
+					writer.writeNext(entries);
+				} else {
+					for (int i = 0; i < timestampList.size(); i++) {
+						int count = i + 1;
+						String entry = count + "#" + timestampList.get(i);
+						String[] entries = entry.split("#");
+						writer.writeNext(entries);
+					}
+				}
 
-		return fileName;
+				writer.close();
+			} catch (IOException e) { // error
+			}
+
+			return fileName;
+		}
+
 	}
 
 	/**
@@ -517,7 +534,7 @@ public class SoapGUI extends Activity implements OnClickListener {
 		File root = Environment.getExternalStorageDirectory();
 		File file = new File(root, fileName);
 		if (!file.exists() || !file.canRead()) {
-			Toast.makeText(this, "Attachment Error", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Attachment Error: No File Created", Toast.LENGTH_SHORT).show();
 			// finish();
 			// return;
 		} else {
