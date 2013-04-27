@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:text="@string/soap_main_label"
-        android:textSize="40sp"
+        android:textSize="37sp"
         android:textColor="@color/pure_white"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="2"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/soap_title"
         android:layout_centerInParent="true"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/soap_action_button_text"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="2"
@@ -59,14 +59,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/soap_last_wash_time"
         android:gravity="left"
-        android:textSize="36sp"
+        android:textSize="33sp"
         android:textColor="@color/soap_title_color"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4"
         android:text="0"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         />
     
     <TextView
@@ -89,14 +89,14 @@
         android:layout_below="@id/soap_last_wash_time"
         android:layout_alignParentRight="true"
         android:gravity="right"
-        android:textSize="36sp"
+        android:textSize="33sp"
         android:textColor="@color/soap_title_color"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="4"
         android:text="0"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         />
     
     <TextView
@@ -122,8 +122,8 @@
         android:layout_centerInParent="true"
         android:text="@string/soap_circle_button_text"
         android:background="@drawable/soap_circle_washed_selector"
-        android:layout_marginTop="10dp"
-        android:textSize="24sp"
+        android:layout_marginTop="1dp"
+        android:textSize="22sp"
         android:padding="20dp"
         />
     
@@ -135,15 +135,15 @@
         android:layout_centerInParent="true"
         android:text="@string/soap_unwash_button_text"
         android:background="@drawable/soap_circle_washed_selector"
-        android:layout_marginTop="15dp"
-        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
         android:padding="20dp"
         />
     
     <edu.neu.madcourse.jameshardy.finalproject.ActionBarView
         android:id="@+id/soap_action_bar_view"
         android:layout_width="fill_parent"
-        android:layout_height="80dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         />
     
