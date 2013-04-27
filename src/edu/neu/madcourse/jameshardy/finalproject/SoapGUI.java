@@ -589,6 +589,7 @@ public class SoapGUI extends Activity implements OnClickListener {
 
 		File root = Environment.getExternalStorageDirectory();
 		File file = new File(root, fileName);
+		//File file = getBaseContext().getFileStreamPath(fileName);
 		if (!file.exists() || !file.canRead()) {
 			Toast.makeText(this, "Attachment Error: No File Created", Toast.LENGTH_SHORT).show();
 			// finish();
