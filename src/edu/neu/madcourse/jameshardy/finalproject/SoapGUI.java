@@ -287,7 +287,14 @@ public class SoapGUI extends Activity implements OnClickListener {
 				TapListenerService.SPREF, 0);
 		// String day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) + "";
 		// return spref.getInt(day, 0);
-		return spref.getInt(DAYCOUNT_PREF, 0);
+		Calendar c = Calendar.getInstance();
+		int currDay = c.get(Calendar.DAY_OF_YEAR);
+		int storedDay = spref.getInt(DAY_PREF, 0);
+		if (currDay == storedDay) {
+			return spref.getInt(DAYCOUNT_PREF, 0);
+		}
+		else return 0; //curr day is different, count = 0
+		
 	}
 
 	public void updateSharedPref() {
@@ -459,8 +466,8 @@ public class SoapGUI extends Activity implements OnClickListener {
 		}
 
 		fileName = "SOAP_" + currDay + ".csv";
-		//fullPath = "/sdcard/" + fileName;
-		fullPath = fileName;
+		fullPath = "/sdcard/" + fileName;
+		//fullPath = fileName;
 
 		File file = getBaseContext().getFileStreamPath(fileName);
 		if (file.exists()) {
@@ -485,6 +492,8 @@ public class SoapGUI extends Activity implements OnClickListener {
 
 					writer.close();
 				} catch (IOException e) { // error
+					Log.d(TAG, "CSVWRITER ERROR: " + e.toString());
+					Toast.makeText(this, "CSVWRITER ERROR: " + e.toString(), Toast.LENGTH_LONG).show();
 				}
 			}
 			return fileName;
@@ -508,6 +517,8 @@ public class SoapGUI extends Activity implements OnClickListener {
 
 				writer.close();
 			} catch (IOException e) { // error
+				Log.d(TAG, "CSVWRITER ERROR: " + e.toString());
+				Toast.makeText(this, "CSVWRITER ERROR: " + e.toString(), Toast.LENGTH_LONG).show();
 			}
 
 			return fileName;
