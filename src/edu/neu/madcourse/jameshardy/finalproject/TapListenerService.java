@@ -68,7 +68,7 @@ public class TapListenerService extends Service implements
 
 	private static final int SHAKE_THRESHOLD = 9;
 	private static final int Z_THRESHOLD = 20;
-	private static final int TAP_THRESHOLD = 3;
+	private static final int TAP_THRESHOLD = 2; //was 3
 	
 	SoapSettingsHolder settings;
 	CountDownTimer timer;
