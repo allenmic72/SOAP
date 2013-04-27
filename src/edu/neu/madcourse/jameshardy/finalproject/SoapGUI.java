@@ -372,35 +372,54 @@ public class SoapGUI extends Activity implements OnClickListener {
 					.fromJson(previousSettings, SoapSettingsHolder.class);
 		}
 
+		/*
 		if (settings.defaultEmail.equals("")) {
 			promptForEmailAddressAndSend();
 		} else {
 			sendEmail(settings.defaultEmail);
 		}
+		*/
+		promptForEmailAddressAndSend(settings.defaultEmail);
 
 	}
 
-	private void promptForEmailAddressAndSend() {
+	private void promptForEmailAddressAndSend(String emailAddr) {
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
 		alert.setTitle("Export Email");
-		alert.setMessage("Please enter an email to send data to: ");
+		alert.setMessage("Please enter an email to send today's recorded data to: ");
 
 		// Set an EditText view to get user input
 		final EditText emailField = new EditText(this);
 		alert.setView(emailField);
+		
+		emailField.setText(emailAddr);
 
 		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 
-				// Do something with value!
-
+				Gson gson = new Gson();
 				String email_addr = emailField.getText().toString();
 
 				if (email_addr.equals("") || email_addr.length() < 7) {
 					Toast.makeText(getBaseContext(), "Invalid Email",
 							Toast.LENGTH_SHORT).show();
 				} else {
+					//store email as default
+					SharedPreferences sprefs = getSharedPreferences(settingsSharedPrefName,
+							0);
+					String previousSettings = sprefs.getString(settingsPrefDataKey, "");
+					Editor e = sprefs.edit();
+					SoapSettingsHolder settings = new SoapSettingsHolder();
+					if (previousSettings != null && previousSettings != "") {
+						// previous settings exist, so load them and set them on view
+						settings = gson.fromJson(previousSettings, SoapSettingsHolder.class);
+					}
+					settings.defaultEmail = email_addr;
+					String updatedSettings = gson.toJson(settings, SoapSettingsHolder.class);
+					e.putString(settingsPrefDataKey, updatedSettings);
+					e.commit();
+					
 					// send email
 					sendEmail(email_addr);
 				}
@@ -444,7 +463,29 @@ public class SoapGUI extends Activity implements OnClickListener {
 
 		File file = getBaseContext().getFileStreamPath(fileName);
 		if (file.exists()) {
-			// file exists don't create
+			// file exists delete it then create new one;
+			if (file.delete()) {
+				CSVWriter writer = null;
+				try {
+					// writer = new CSVWriter(new FileWriter("/sdcard/myfile.csv"),
+					// ',');
+					writer = new CSVWriter(new FileWriter(fullPath), ',');
+					if (timestampList.isEmpty()) {
+						String[] entries = "today#no data".split("#");
+						writer.writeNext(entries);
+					} else {
+						for (int i = 0; i < timestampList.size(); i++) {
+							int count = i + 1;
+							String entry = count + "#" + timestampList.get(i);
+							String[] entries = entry.split("#");
+							writer.writeNext(entries);
+						}
+					}
+
+					writer.close();
+				} catch (IOException e) { // error
+				}
+			}
 			return fileName;
 		} else {
 			CSVWriter writer = null;
