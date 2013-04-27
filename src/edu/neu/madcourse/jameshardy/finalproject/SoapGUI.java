@@ -121,8 +121,12 @@ public class SoapGUI extends Activity implements OnClickListener {
 			finish();
 			break;
 		case R.id.soap_manual_wash_button:
-			updateSharedPref();
+			updateSharedPref(true);
 			updateGUI(false);
+			break;
+		case R.id.soap_unwash_button:
+			updateSharedPref(false);
+			updateGUI(true);
 			break;
 
 		}
@@ -301,7 +305,7 @@ public class SoapGUI extends Activity implements OnClickListener {
 		
 	}
 
-	public void updateSharedPref() {
+	public void updateSharedPref(boolean wash) {
 		/*
 		 * Shared Preferences <numdays,#> <currentday,#> <daycount, #>
 		 * <totalcount, #>
@@ -323,6 +327,7 @@ public class SoapGUI extends Activity implements OnClickListener {
 		int storedDay = sprefs.getInt(DAY_PREF, 0);
 		// new day of counting
 
+		if (wash) {
 		if (currDay > storedDay) {
 			// reset the daily count to one
 			e.putInt(DAYCOUNT_PREF, 1);
@@ -367,6 +372,30 @@ public class SoapGUI extends Activity implements OnClickListener {
 		}
 
 		e.commit();
+		} else {
+			// decrement count unless 0
+			int dailyCnt = sprefs.getInt(DAYCOUNT_PREF, 0);
+			int totalCnt = sprefs.getInt(TOTALCOUNT_PREF, 0);
+			if (dailyCnt > 0 && totalCnt > 0) {
+				e.putInt(TOTALCOUNT_PREF, --totalCnt);
+				e.putInt(DAYCOUNT_PREF, --dailyCnt);
+			}
+			String timestamp_str = sprefs.getString(currDay_str, "");
+			// Log.d(TAG, "NULL CHECK " + timestamp_str);
+			List<String> timestampList = new ArrayList<String>() {
+			};
+			// Log.d(TAG, "NULL CHECK " + timestampList.toString());
+			if (!timestamp_str.equals("")) {
+				timestampList = g.fromJson(timestamp_str, listTimestamps);
+				timestampList.remove(timestampList.size() - 1);
+			}
+
+			timestamp_str = g.toJson(timestampList, listTimestamps);
+			e.putString(currDay_str, timestamp_str);
+
+			e.commit();
+
+		}
 
 	}
 
