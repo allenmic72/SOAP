@@ -127,6 +127,19 @@
         android:padding="20dp"
         />
     
+    <Button
+        android:id="@+id/soap_unwash_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/soap_manual_wash_button"
+        android:layout_centerInParent="true"
+        android:text="@string/soap_unwash_button_text"
+        android:background="@drawable/soap_circle_washed_selector"
+        android:layout_marginTop="15dp"
+        android:textSize="14sp"
+        android:padding="20dp"
+        />
+    
     <edu.neu.madcourse.jameshardy.finalproject.ActionBarView
         android:id="@+id/soap_action_bar_view"
         android:layout_width="fill_parent"

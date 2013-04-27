@@ -102,6 +102,10 @@ public class SoapGUI extends Activity implements OnClickListener {
 		Button washButton = (Button) findViewById(R.id.soap_manual_wash_button);
 		washButton.setOnClickListener(this);
 		washButton.setTypeface(helveticaLight);
+		
+		Button unWashButton = (Button) findViewById(R.id.soap_unwash_button);
+		unWashButton.setOnClickListener(this);
+		unWashButton.setTypeface(helveticaLight);
 
 	}
 

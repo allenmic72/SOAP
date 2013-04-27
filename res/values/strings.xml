@@ -171,5 +171,6 @@ on the following devices:\n\nMotorola Droid Bionic
 	    \n\n\tExport Reminder will pop up a notification to remind you to export your data at the end of the day
 	    \n\n\tAdd a default email so that you won\'t have to provide it each time you export data.
 	</string>
+	<string name="soap_unwash_button_text">Undo Wash</string>
 
 </resources>
